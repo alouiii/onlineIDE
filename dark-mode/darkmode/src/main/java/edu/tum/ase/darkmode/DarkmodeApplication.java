@@ -18,10 +18,22 @@ public class DarkmodeApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(DarkmodeApplication.class, args);
 	}
-	
+
 	@RequestMapping(path = "/dark-mode/toggle", method = RequestMethod.GET)
 	public void toggleDarkMode() {
-    // TODO: implement dark mode toggle
-	}
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastToggleTime >= COOLDOWN_TIME) {
+            isDarkModeOn = !isDarkModeOn;
+            lastToggleTime = currentTime;
+            System.out.println("Toggled dark mode. Current status: " + isDarkModeOn);
+        } else {
+            System.out.println("Cooldown active. Cannot toggle dark mode.");
+        }
+    }
+
+	@RequestMapping(path = "/dark-mode", method = RequestMethod.GET)
+    public boolean getDarkModeStatus() {
+        return isDarkModeOn;
+    }
 
 }
