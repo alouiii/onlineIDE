@@ -1,0 +1,11 @@
+<select (change)="changeLanguage($event.target.value)">
+    <option value="javascript">JavaScript</option>
+    <option value="python">Python</option>
+    <option value="java">Java</option>
+    <!-- other options -->
+</select>
+
+<!-- The Monaco Editor -->
+<ngx-monaco-editor [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
+
+<p>code-editor works!</p>
