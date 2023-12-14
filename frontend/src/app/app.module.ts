@@ -1,16 +1,24 @@
 import { NgModule } from '@angular/core';
-import { MonacoEditorModule } from 'ngx-monaco-editor';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterModule } from '@angular/router';
+import { routes } from './app.routes';
 import { AppComponent } from './app.component';
+import { FileExplorerComponent } from './file-explorer/file-explorer.component';
+import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { TerminalComponent } from './terminal/terminal.component';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    // your components here
-  ],
+   ],
   imports: [
-    // other modules here
-    MonacoEditorModule.forRoot() // use forRoot() in the main app module only.
+    BrowserModule,
+    RouterModule.forRoot(routes),
+    CommonModule,
+    FormsModule
   ],
   providers: [],
-  bootstrap: [AppComponent]
+  // bootstrap: []
 })
 export class AppModule { }

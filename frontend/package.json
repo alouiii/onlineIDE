@@ -14,13 +14,16 @@
     "@angular/common": "^17.0.0",
     "@angular/compiler": "^17.0.0",
     "@angular/core": "^17.0.0",
-    "@angular/forms": "^17.0.0",
+    "@angular/forms": "^17.0.5",
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "ngx-monaco-editor": "^12.0.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
-    "zone.js": "~0.14.2"
+    "zone.js": "~0.14.2",
+    "ngx-monaco-editor-v2": "^17.0.1"
+
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "^17.0.3",
