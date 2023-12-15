@@ -3,13 +3,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 
 import { AppComponent } from './app.component';
+import { CodeEditorComponent } from './code-editor/code-editor.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    CodeEditorComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule,
     MonacoEditorModule.forRoot()
   ],
   providers: [],
