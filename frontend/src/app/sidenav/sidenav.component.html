@@ -1,0 +1,15 @@
+<mat-sidenav-container class="parent">
+  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
+    ciao ciao ciao
+  </mat-sidenav>
+
+  <mat-sidenav-content>
+    <h1>Hello World!</h1>
+    <app-code-editor />
+    <p>
+      <button mat-button (click)="sidenav.toggle()">
+        {{ opened ? "close" : "open" }}
+      </button>
+    </p>
+  </mat-sidenav-content>
+</mat-sidenav-container>
