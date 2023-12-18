@@ -1,13 +1,4 @@
-:root {
-    --primary-color: #4a90e2;
-    --background-color: #f0f0f0;
-    --text-color: #333;
-    /* other global styles... */
-}
+/* You can add global styles to this file, and also import other style files */
 
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: var(--background-color);
-    color: var(--text-color);
-}
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

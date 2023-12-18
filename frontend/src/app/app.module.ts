@@ -1,24 +1,25 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { RouterModule } from '@angular/router';
-import { routes } from './app.routes';
+import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
+
 import { AppComponent } from './app.component';
-import { FileExplorerComponent } from './file-explorer/file-explorer.component';
 import { CodeEditorComponent } from './code-editor/code-editor.component';
-import { TerminalComponent } from './terminal/terminal.component';
-import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { NavbarComponent } from './navbar/navbar.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { SidenavComponent } from './sidenav/sidenav.component';
 
 @NgModule({
-  declarations: [
-   ],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
-    RouterModule.forRoot(routes),
-    CommonModule,
-    FormsModule
+    MonacoEditorModule.forRoot(),
+    BrowserAnimationsModule,
+    NavbarComponent,
+    SidenavComponent,
+    CodeEditorComponent,
   ],
   providers: [],
-  // bootstrap: []
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}
