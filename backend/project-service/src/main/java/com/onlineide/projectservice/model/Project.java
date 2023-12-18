@@ -8,6 +8,8 @@ import org.springframework.core.SpringVersion;
 @Table(name = "project")
 @AllArgsConstructor
 @NoArgsConstructor
+@Getter
+@Setter
 @Builder
 public class Project {
 

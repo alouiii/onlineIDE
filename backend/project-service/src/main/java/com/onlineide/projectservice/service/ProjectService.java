@@ -1,10 +1,13 @@
 package com.onlineide.projectservice.service;
 
 import com.onlineide.projectservice.dto.ProjectRequest;
+import com.onlineide.projectservice.dto.ProjectResponse;
 import com.onlineide.projectservice.model.Project;
 import com.onlineide.projectservice.repository.ProjectRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class ProjectService {
@@ -19,5 +22,12 @@ public class ProjectService {
                 .build();
 
         projectRepository.save(project);
+    }
+
+    public List<ProjectResponse> getAllProjects() {
+
+            List<Project> projects = projectRepository.findAll();
+
+            return ProjectResponse.fromProjects(projects);
     }
 }
