@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
+import { ApiClientService } from '../api-client.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -12,4 +13,8 @@ import { CodeEditorComponent } from '../code-editor/code-editor.component';
 })
 export class SidenavComponent {
   opened: boolean = false;
+
+  constructor(private apiClient: ApiClientService) {
+    this.apiClient.getData('/todos').subscribe((data) => console.log(data));
+  }
 }
