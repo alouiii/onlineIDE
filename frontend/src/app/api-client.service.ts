@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiClientService {
-  private baseURL = 'https://jsonplaceholder.typicode.com'; //just a placeholder, this should be changed with our url
+  private baseURL = 'http://localhost:8081';
 
   constructor(private http: HttpClient) {}
 

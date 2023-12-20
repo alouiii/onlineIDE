@@ -26,10 +26,10 @@ import { File } from '../interfaces/file';
 })
 export class SidenavComponent {
   constructor(private apiClient: ApiClientService) {
-    this.apiClient.getData('/todos').subscribe((data) => console.log(data)); //just an example of call
+    //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 
-  showInput: boolean = false
+  showInput: boolean = false;
 
   allFiles: File[] = [
     {
@@ -47,11 +47,10 @@ export class SidenavComponent {
       name,
       extension,
     });
-    this.showInput = false
+    this.showInput = false;
   }
 
   toggleInput() {
     this.showInput = !this.showInput;
   }
-  
 }
