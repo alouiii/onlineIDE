@@ -30,4 +30,11 @@ public class ProjectController {
 
         return projectService.getAllProjects();
     }
+
+    @GetMapping("/{id}")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ProjectResponse getProjectById(@PathVariable Long id) {
+
+        return projectService.getProjectById(id);
+    }
 }

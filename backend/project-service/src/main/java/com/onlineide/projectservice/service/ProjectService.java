@@ -23,11 +23,13 @@ public class ProjectService {
 
     public void createProject(ProjectRequest projectRequest) {
 
+        // TODO: Check if username exists in user-service
+
         Project project = Project.builder()
                 .name(projectRequest.getName())
                 .userId(projectRequest.getUserId())
                 .build();
-
+        log.info("create project: {}", project);
         projectRepository.save(project);
     }
 
@@ -35,7 +37,18 @@ public class ProjectService {
 
             List<Project> projects = projectRepository.findAll();
 
-            log.info("projects: {}", projects);
+            log.info("get projects: {}", projects);
             return ProjectResponse.fromProjects(projects);
+    }
+
+    public ProjectResponse getProjectById(Long id) {
+
+        Project project = projectRepository.findById(id).orElseThrow();
+        log.info("get project: {}", project);
+        return ProjectResponse.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .userId(project.getUserId())
+                .build();
     }
 }
