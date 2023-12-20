@@ -7,6 +7,7 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { SidenavComponent } from './sidenav/sidenav.component';
 import { HttpClientModule } from '@angular/common/http';
+import { TerminalComponent } from './terminal/terminal.component';
 
 @NgModule({
   declarations: [AppComponent],
@@ -18,6 +19,7 @@ import { HttpClientModule } from '@angular/common/http';
     SidenavComponent,
     CodeEditorComponent,
     HttpClientModule,
+    TerminalComponent
   ],
   providers: [],
   bootstrap: [AppComponent],
