@@ -21,9 +21,9 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public void createProject(@RequestBody Map<String, String> projectRequest) {
+    public ProjectResponse createProject(@RequestBody Map<String, String> projectRequest) {
 
-        projectService.createProject(projectRequest.get("name"));
+        return projectService.createProject(projectRequest.get("name"));
     }
 
     @GetMapping
@@ -42,9 +42,9 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void updateProject(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
+    public ProjectResponse updateProjectName(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
 
-        projectService.updateProject(id, projectRequest);
+        return projectService.updateProjectName(id, projectRequest);
     }
 
     @DeleteMapping("/{id}")
@@ -52,5 +52,12 @@ public class ProjectController {
     public void deleteProject(@PathVariable String id) {
 
         projectService.deleteProject(id);
+    }
+
+    @PutMapping("/{id}/share")
+    @ResponseStatus(code = HttpStatus.OK)
+    public ProjectResponse addUserToProject(@PathVariable String id, @RequestBody Map<String, String> userRequest) {
+
+        return projectService.addUserToProject(id, userRequest.get("username"));
     }
 }
