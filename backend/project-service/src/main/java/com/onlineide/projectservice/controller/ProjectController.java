@@ -1,5 +1,6 @@
 package com.onlineide.projectservice.controller;
 
+import com.onlineide.projectservice.dto.FileResponse;
 import com.onlineide.projectservice.dto.ProjectRequest;
 import com.onlineide.projectservice.dto.ProjectResponse;
 import com.onlineide.projectservice.model.Project;
@@ -59,5 +60,19 @@ public class ProjectController {
     public ProjectResponse addUserToProject(@PathVariable String id, @RequestBody Map<String, String> userRequest) {
 
         return projectService.addUserToProject(id, userRequest.get("username"));
+    }
+
+    @PostMapping("/{id}/file")
+    @ResponseStatus(code = HttpStatus.CREATED)
+    public FileResponse addFileToProject(@PathVariable String id, @RequestBody Map<String, String> fileRequest) {
+
+        return projectService.addFileToProject(id, fileRequest.get("fileName"));
+    }
+
+    @GetMapping("/{id}/file")
+    @ResponseStatus(code = HttpStatus.OK)
+    public List<FileResponse> getFilesFromProject(@PathVariable String id) {
+
+        return projectService.getFilesFromProject(id);
     }
 }

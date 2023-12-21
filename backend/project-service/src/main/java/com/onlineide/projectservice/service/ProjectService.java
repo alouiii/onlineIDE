@@ -1,9 +1,12 @@
 package com.onlineide.projectservice.service;
 
+import com.onlineide.projectservice.dto.FileResponse;
 import com.onlineide.projectservice.dto.ProjectRequest;
 import com.onlineide.projectservice.dto.ProjectResponse;
+import com.onlineide.projectservice.model.File;
 import com.onlineide.projectservice.model.Project;
 import com.onlineide.projectservice.model.User;
+import com.onlineide.projectservice.repository.FileRepository;
 import com.onlineide.projectservice.repository.ProjectRepository;
 import com.onlineide.projectservice.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +27,9 @@ public class ProjectService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private FileRepository fileRepository;
 
     @Autowired
     private WebClient webClient;
@@ -96,5 +102,27 @@ public class ProjectService {
             projectRepository.save(project);
 
         return ProjectResponse.fromProject(project);
+    }
+
+    public FileResponse addFileToProject(String id, String fileName) {
+
+                Project project = projectRepository.findById(id).orElseThrow();
+                File file = File.builder()
+                        .name(fileName)
+                        .project(project)
+                        .build();
+                project.getFiles().add(file);
+                log.info("add file: {} to project: {}", fileName, project.getName());
+                projectRepository.save(project);
+                fileRepository.save(file);
+
+            return FileResponse.fromFile(file);
+    }
+
+    public List<FileResponse> getFilesFromProject(String id) {
+
+                Project project = projectRepository.findById(id).orElseThrow();
+                log.info("get files from project: {}", project.getName());
+                return FileResponse.fromFiles(project.getFiles());
     }
 }
