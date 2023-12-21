@@ -30,7 +30,7 @@ public class ProjectService {
         Project project = Project.builder()
                 .name(username)
                 .build();
-        log.info("create project: {}", project);
+        log.info("creating project: {}", project.toString());
         projectRepository.save(project);
     }
 
@@ -42,14 +42,14 @@ public class ProjectService {
             return ProjectResponse.fromProjects(projects);
     }
 
-    public ProjectResponse getProjectById(Long id) {
+    public ProjectResponse getProjectById(String id) {
 
         Project project = projectRepository.findById(id).orElseThrow();
         log.info("get project: {}", project);
         return ProjectResponse.fromProject(project);
     }
 
-    public void updateProject(Long id, ProjectRequest projectRequest) {
+    public void updateProject(String id, ProjectRequest projectRequest) {
 
             Project project = projectRepository.findById(id).orElseThrow();
             project.setName(projectRequest.getName());
@@ -61,7 +61,7 @@ public class ProjectService {
             projectRepository.save(project);
     }
 
-    public void deleteProject(Long id) {
+    public void deleteProject(String id) {
 
                 Project project = projectRepository.findById(id).orElseThrow();
                 log.info("delete project: {}", project);

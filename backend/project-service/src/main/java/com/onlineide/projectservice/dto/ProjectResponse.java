@@ -15,7 +15,7 @@ import java.util.List;
 @Builder
 public class ProjectResponse {
 
-        private Long id;
+        private String id;
         private String name;
         private List<String> userIds = List.of();
 

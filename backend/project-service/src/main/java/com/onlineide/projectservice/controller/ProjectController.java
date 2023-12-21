@@ -35,21 +35,21 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ProjectResponse getProjectById(@PathVariable Long id) {
+    public ProjectResponse getProjectById(@PathVariable String id) {
 
         return projectService.getProjectById(id);
     }
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void updateProject(@PathVariable Long id, @RequestBody ProjectRequest projectRequest) {
+    public void updateProject(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
 
         projectService.updateProject(id, projectRequest);
     }
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
-    public void deleteProject(@PathVariable Long id) {
+    public void deleteProject(@PathVariable String id) {
 
         projectService.deleteProject(id);
     }

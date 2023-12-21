@@ -13,7 +13,7 @@ import java.util.Set;
 @Builder
 public class ProjectRequest {
 
-        private Long id;
+        private String id;
         private String name;
         private Set<String> userIds = Set.of();
 }
