@@ -1,6 +1,7 @@
 package com.onlineide.projectservice.dto;
 
 import com.onlineide.projectservice.model.Project;
+import com.onlineide.projectservice.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,7 +17,7 @@ public class ProjectResponse {
 
         private Long id;
         private String name;
-        private Long userId;
+        private List<String> userIds = List.of();
 
     public static List<ProjectResponse> fromProjects(List<Project> projects) {
 
@@ -24,8 +25,21 @@ public class ProjectResponse {
                 .map(project -> ProjectResponse.builder()
                         .id(project.getId())
                         .name(project.getName())
-                        .userId(project.getUserId())
+                        .userIds(project.getUsers().stream()
+                                .map(User::getUsername)
+                                .toList())
                         .build())
                 .toList();
+    }
+
+    public static ProjectResponse fromProject(Project project) {
+
+            return ProjectResponse.builder()
+                    .id(project.getId())
+                    .name(project.getName())
+                    .userIds(project.getUsers().stream()
+                            .map(User::getUsername)
+                            .toList())
+                    .build();
     }
 }
