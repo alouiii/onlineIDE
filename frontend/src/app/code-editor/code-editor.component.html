@@ -2,6 +2,7 @@
   <option value="javascript">JavaScript</option>
   <option value="python">Python</option>
   <option value="java">Java</option>
+  <option value="c">C</option>
   <option value="csharp">C#</option>
   <option value="cpp">C++</option>
   <option value="php">PHP</option>
@@ -13,15 +14,11 @@
 </select>
 
 <div class="buttons-container">
-  <button mat-raised-button>Save</button>
-  <button mat-raised-button>Compile</button>
-  <button mat-raised-button>Run</button>
+  <button mat-raised-button (click)="save()">Save</button>
+  <button mat-raised-button (click)="compile()">Compile</button>
+  <button mat-raised-button (click)="run()">Run</button>
 </div>
 
 <div style="height: 500px">
-  <ngx-monaco-editor
-    style="height: 100%"
-    [options]="editorOptions"
-    [(ngModel)]="code"
-  ></ngx-monaco-editor>
+  <ngx-monaco-editor style="height: 100%" [options]="editorOptions" [(ngModel)]="code"></ngx-monaco-editor>
 </div>
