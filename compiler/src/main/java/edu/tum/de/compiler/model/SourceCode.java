@@ -7,6 +7,8 @@ public class SourceCode {
     private String stderr;
     private boolean compilable = false;
 
+    public SourceCode() {
+    }
     public SourceCode(String fileName, String code) {
         this.fileName = fileName;
         this.code = code;
