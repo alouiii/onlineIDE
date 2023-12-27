@@ -1,6 +1,6 @@
 package edu.tum.de.compiler.service;
 
-import edu.tum.de.compiler.controller.CCompiler;
+import edu.tum.de.compiler.controller.MyCCompiler;
 import edu.tum.de.compiler.controller.ICompiler;
 import edu.tum.de.compiler.controller.MyJavaCompiler;
 import edu.tum.de.compiler.model.SourceCode;
@@ -17,7 +17,7 @@ public class CompilerService {
         compilers = new HashMap<>();
         // Register available compilers
         registerCompiler("java", new MyJavaCompiler());
-        registerCompiler("c", new CCompiler());
+        registerCompiler("c", new MyCCompiler());
         // Add more compilers as needed
     }
 
@@ -39,7 +39,7 @@ public class CompilerService {
     public static void main(String[] args) {
         CompilerService compilerService = new CompilerService();
         SourceCode sourceCodeJava = new SourceCode("HelloWorld", "public class HelloWorld { public static void main(String[] args) { System.out.println(\"Hello, World!\"); }}");
-        SourceCode sourceCodeC = new SourceCode("my_c_file","#include <stdio.h>\nint main() { printf(\"Hello, World!\\n\"); return 0; }");
+        SourceCode sourceCodeC = new SourceCode("my_c_file", "#include <stdio.h>\nint main() { printf(\"Hello, World!\\n\"); return 0; }");
 
         // Compile Java code
         SourceCode compiledCodeJava = compilerService.compile(sourceCodeJava, "java");

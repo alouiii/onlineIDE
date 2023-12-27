@@ -8,6 +8,9 @@ import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Arrays;
 
 /**
@@ -75,6 +78,11 @@ public class MyJavaCompiler implements ICompiler {
             sourceCode.setStderr(baos.toString());
             sourceCode.setCompilable(success);
 
+            // Delete the .class file after compilation
+            if (success) {
+                deleteJavaFile(sourceCode.getFileName() + ".class");
+            }
+
         } catch (Exception e) {
             // Handle exceptions appropriately and set an error message
             e.printStackTrace();
@@ -125,6 +133,20 @@ public class MyJavaCompiler implements ICompiler {
 
         public byte[] getBytes() {
             return outputStream.toByteArray();
+        }
+    }
+
+    /**
+     * Delete the .java file after compilation.
+     *
+     * @param fileName The name of the .java file to be deleted.
+     */
+    private void deleteJavaFile(String fileName) {
+        try {
+            Path javaFilePath = Paths.get(fileName);
+            Files.deleteIfExists(javaFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
