@@ -24,7 +24,6 @@ export class CompileService {
       // Mock response
       const mockOutput = `Mocked output for code: ${code}`;
       this.compileOutputSource.next(mockOutput);
-      console.log('Mock output sent:', mockOutput); // Added for debugging
       return of({ output: mockOutput });
     } else {
       // Actual HTTP request

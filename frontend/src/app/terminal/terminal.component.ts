@@ -16,7 +16,6 @@ export class TerminalComponent implements OnDestroy {
     this.subscription = this.compileService.currentOutput.subscribe(
       (newOutput) => {
         this.output = newOutput;
-        console.log('New output received:', newOutput); // Added for debugging
       }
     );
   }

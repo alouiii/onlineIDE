@@ -63,6 +63,7 @@ export class CodeEditorComponent {
       code: this.code,
     };
 
+    //logs here will stay tell tested with api, once the connection is confirmed it will be removed
     console.log(`Sending code to ${apiUrl} for execution...`, payload);
     this.httpClient.post(apiUrl, payload).subscribe({
       next: (response) => {
