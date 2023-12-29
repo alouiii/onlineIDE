@@ -46,7 +46,6 @@ export class CodeEditorComponent {
   }
 
   compile() {
-    console.log('Compiling code:', this.code); // Added for debugging
     this.compileService.compileCode(this.code).subscribe({
       next: (response) => {
         console.log('Compilation successful:', response);
