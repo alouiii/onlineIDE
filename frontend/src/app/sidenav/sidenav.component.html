@@ -1,15 +1,30 @@
 <mat-sidenav-container class="parent">
-  <mat-sidenav #sidenav mode="side" [(opened)]="opened">
-    ciao ciao ciao
+  <mat-sidenav #sidenav class="my-sidenav" mode="side" opened>
+    <h1>Project X</h1>
+    <div *ngIf="showInput">
+      <input
+        #newFile
+        placeholder="add a file"
+        (keyup.enter)="
+          addFile(newFile.value.split('.')[0], newFile.value.split('.')[1]);
+          newFile.value = ''
+        "
+        class="lg-text-input"
+        id="addFileInput"
+      />
+    </div>
+    <ul>
+      <li *ngFor="let file of files">{{ file.name + "." + file.extension }}</li>
+    </ul>
+
+    <div class="buttons-container">
+      <button mat-raised-button (click)="toggleInput()">New File</button>
+      <button mat-raised-button color="primary">Share Project</button>
+    </div>
   </mat-sidenav>
 
   <mat-sidenav-content>
-    <h1>Hello World!</h1>
     <app-code-editor />
-    <p>
-      <button mat-button (click)="sidenav.toggle()">
-        {{ opened ? "close" : "open" }}
-      </button>
-    </p>
+    <app-terminal />
   </mat-sidenav-content>
 </mat-sidenav-container>
