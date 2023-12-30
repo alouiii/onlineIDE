@@ -1,4 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
+import { Subscription } from 'rxjs';
+import { CompileService } from '../compile.service';
 
 @Component({
   selector: 'app-terminal',
@@ -6,6 +8,23 @@ import { Component } from '@angular/core';
   styleUrls: ['./terminal.component.css'],
   standalone: true,
 })
-export class TerminalComponent {
+export class TerminalComponent implements OnDestroy {
+  output: string = '';
+  private subscription?: Subscription;
 
+  constructor(private compileService: CompileService) {
+    this.subscription = this.compileService.currentOutput.subscribe(
+      (newOutput) => {
+        this.output = newOutput;
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription?.unsubscribe();
+  }
+
+  clearOutput() {
+    this.output = ''; // Clear the output
+  }
 }
