@@ -8,6 +8,8 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { File } from '../interfaces/file';
+import { MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import { FileDialogComponent } from './file-dialog/file-dialog.component';
 
 @Component({
   selector: 'app-sidenav',
@@ -22,10 +24,12 @@ import { File } from '../interfaces/file';
     MatButtonModule,
     MatDividerModule,
     MatIconModule,
+    FileDialogComponent,
+    MatDialogModule,
   ],
 })
 export class SidenavComponent {
-  constructor(private apiClient: ApiClientService) {
+  constructor(private apiClient: ApiClientService, private dialog: MatDialog) {
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 

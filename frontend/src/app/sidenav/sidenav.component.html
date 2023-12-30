@@ -1,5 +1,13 @@
 <mat-sidenav-container class="parent">
   <mat-sidenav #sidenav class="my-sidenav" mode="side" opened>
+    <div class="back-button">
+      <button
+        mat-raised-button
+        color="primary"
+      >
+        <mat-icon>arrow_back</mat-icon> Back
+      </button>
+    </div>
     <h1>Project X</h1>
     <div *ngIf="showInput">
       <input
@@ -18,7 +26,7 @@
     </ul>
 
     <div class="buttons-container">
-      <button mat-raised-button (click)="toggleInput()">New File</button>
+      <app-file-dialog />
       <button mat-raised-button color="primary">Share Project</button>
     </div>
   </mat-sidenav>
