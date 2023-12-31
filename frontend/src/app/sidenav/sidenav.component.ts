@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
@@ -42,10 +42,12 @@ export class SidenavComponent {
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 
+  @ViewChild('fileDialog') fileDialog!: FileDialogComponent;
+
   // Use a Map to store the showDropdown state for each file
   showFileDropdownMap: Map<File, boolean> = new Map();
 
-  selectedFile: File | null = null; // Track the selected file
+  //selectedFile: File | null = null; // Track the selected file
 
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();
@@ -58,15 +60,16 @@ export class SidenavComponent {
     // Open the dropdown for the clicked file
     this.showFileDropdownMap.set(file, true);
 
-    this.selectedFile = file;
+    this.fileService.updateSelectedFile(file);
 
     // Attach a click event listener to close the dropdown when clicking outside of it
     const outsideClickListener = (e: MouseEvent) => {
-      if (!this.isClickInsideDropdown(e)) {
+      if (!this.isClickInsideDropdown(e) && !this.fileService.isRenaming) {
         this.showFileDropdownMap.forEach((value, key) => {
           this.showFileDropdownMap.set(key, false);
         });
-        this.selectedFile = null;
+        this.fileService.updateSelectedFile(null);
+        this.fileService.isRenaming = false;
         document.removeEventListener('click', outsideClickListener);
       }
     };
@@ -81,12 +84,20 @@ export class SidenavComponent {
   }
 
   handleFileClick(event: MouseEvent): void {
-    console.log('Regular click event');
+    //console.log('Regular click event');
   }
 
   deleteFile() {
-    if (this.selectedFile !== null) {
-      this.fileService.removeFile(this.selectedFile);
+    if (this.fileService.selectedFile !== null) {
+      this.fileService.removeFile(this.fileService.selectedFile);
     }
+  }
+
+  openFileModal() {
+    this.fileDialog.openDialog('200ms', '200ms');
+    this.fileService.isRenaming = true;
+    this.showFileDropdownMap.forEach((value, key) => {
+      this.showFileDropdownMap.set(key, false);
+    });
   }
 }

@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { FileService } from 'src/app/services/file.service';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-file-dialog',
@@ -36,17 +37,34 @@ export class FileDialogComponent {
   selector: 'dialog-animations-dialog',
   templateUrl: 'file-dialog-template.html',
   styleUrls: ['file-dialog-template.css'],
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatDividerModule],
+  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatDividerModule, FormsModule],
 })
 export class DialogAnimationsDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogAnimationsDialog>,
-    private fileService: FileService
+    public fileService: FileService
   ) {}
-
-  createFile(file: string) {
+  private createFile(file: string) {
     const [name, extension] = file.split('.');
     this.fileService.addFile({ name, extension });
+    this.dialogRef.close();
+  }
+
+  private renameFile(newName: string) {
+    if (this.fileService.selectedFile !== null) {
+      this.fileService.renameFile(this.fileService.selectedFile, newName);
+      this.dialogRef.close();
+      this.fileService.isRenaming = false;
+    }
+  }
+
+  performAction(newFileName: string): void {
+    if (this.fileService.isRenaming) {
+      this.renameFile(newFileName);
+    } else {
+      this.createFile(newFileName);
+    }
+    // Close the dialog after either creating or renaming
     this.dialogRef.close();
   }
 }

@@ -1,6 +1,8 @@
 <div>
   <h1 mat-dialog-title class="dialog-title-container">
-    <span class="dialog-title-text">New file</span>
+    <span class="dialog-title-text"
+      >{{ fileService.isRenaming ? 'Rename File' : 'New File' }}</span
+    >
     <button mat-dialog-close mat-icon-button class="dialog-close-button">
       <mat-icon>close</mat-icon>
     </button>
@@ -10,8 +12,8 @@
     <input
       #newFile
       class="input-field"
-      placeholder="Enter file name"
-      (keyup.enter)="createFile(newFile.value)"
+      placeholder="{{ fileService.isRenaming ? 'Enter new file name' : 'Enter file name' }}"
+      (keyup.enter)="performAction(newFile.value)"
     />
   </div>
   <mat-divider></mat-divider>
@@ -21,9 +23,9 @@
       color="primary"
       mat-dialog-close
       cdkFocusInitial
-      (click)="createFile(newFile.value)"
+      (click)="performAction(newFile.value)"
     >
-      Create
+      {{ fileService.isRenaming ? 'Rename' : 'Create' }}
     </button>
   </div>
 </div>
