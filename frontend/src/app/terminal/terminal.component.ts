@@ -1,6 +1,6 @@
 import { Component, OnDestroy } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { CompileService } from '../compile.service';
+import { CompileService } from '../services/compile.service';
 
 @Component({
   selector: 'app-terminal',

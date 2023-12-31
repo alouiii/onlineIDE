@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
-import { ApiClientService } from '../api-client.service';
+import { ApiClientService } from '../services/api-client.service';
 import { TerminalComponent } from '../terminal/terminal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
