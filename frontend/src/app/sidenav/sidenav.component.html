@@ -7,7 +7,17 @@
     </div>
     <h1>Project X</h1>
     <div *ngFor="let file of fileService.files">
-      <div class="file">
+      <div
+        class="file"
+        (contextmenu)="handleFileRightClick($event, file)"
+        (click)="handleFileClick($event)"
+      >
+        <div *ngIf="showFileDropdownMap.get(file)" class="dropdown-menu">
+          <ul>
+            <li>Rename</li>
+            <li>Delete</li>
+          </ul>
+        </div>
         <mat-icon class="custom-icon">description</mat-icon
         >{{ file.name + "." + file.extension }}
       </div>

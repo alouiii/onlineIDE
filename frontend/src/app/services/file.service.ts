@@ -12,6 +12,14 @@ export class FileService {
       name: 'ciao',
       extension: 'c',
     },
+    {
+      name: 'ciao',
+      extension: 'c',
+    },
+    {
+      name: 'ciao',
+      extension: 'c',
+    },
   ];
 
   get files() {
