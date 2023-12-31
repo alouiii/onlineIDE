@@ -26,10 +26,14 @@ export class FileService {
     return this.allFiles;
   }
 
-  addFile(name: string, extension: string) {
-    this.allFiles.unshift({
-      name,
-      extension,
-    });
+  addFile(file: File) {
+    this.allFiles.unshift(file);
+  }
+
+  removeFile(file: File) {
+    const index = this.allFiles.indexOf(file);
+    if (index !== -1) {
+      this.allFiles.splice(index, 1);
+    }
   }
 }

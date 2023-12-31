@@ -45,6 +45,8 @@ export class SidenavComponent {
   // Use a Map to store the showDropdown state for each file
   showFileDropdownMap: Map<File, boolean> = new Map();
 
+  selectedFile: File | null = null; // Track the selected file
+
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();
 
@@ -56,12 +58,15 @@ export class SidenavComponent {
     // Open the dropdown for the clicked file
     this.showFileDropdownMap.set(file, true);
 
+    this.selectedFile = file;
+
     // Attach a click event listener to close the dropdown when clicking outside of it
     const outsideClickListener = (e: MouseEvent) => {
       if (!this.isClickInsideDropdown(e)) {
         this.showFileDropdownMap.forEach((value, key) => {
           this.showFileDropdownMap.set(key, false);
         });
+        this.selectedFile = null;
         document.removeEventListener('click', outsideClickListener);
       }
     };
@@ -77,5 +82,11 @@ export class SidenavComponent {
 
   handleFileClick(event: MouseEvent): void {
     console.log('Regular click event');
+  }
+
+  deleteFile() {
+    if (this.selectedFile !== null) {
+      this.fileService.removeFile(this.selectedFile);
+    }
   }
 }

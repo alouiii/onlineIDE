@@ -42,11 +42,15 @@
   background-color: #f0f0f0;
 }
 
+.file-selected {
+  background-color: #f0f0f0;
+}
+
 .dropdown-menu {
   position: absolute;
   right: 10px;
   top: 30px;
-  background-color: #7e929c;
+  background-color: #d7dbdc;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   border-radius: 4px;
   z-index: 1;
@@ -54,10 +58,15 @@
 
 .dropdown-menu ul {
   list-style-type: none;
-  padding: 2px 0;
+  padding: 0 0;
   margin: 0;
 }
 
 .dropdown-menu li {
   padding: 5px 12px;
+  border-radius: 4px;
+}
+
+.dropdown-menu li:hover {
+  background-color: #adafb1;
 }

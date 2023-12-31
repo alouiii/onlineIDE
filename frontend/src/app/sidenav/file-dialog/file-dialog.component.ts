@@ -46,7 +46,7 @@ export class DialogAnimationsDialog {
 
   createFile(file: string) {
     const [name, extension] = file.split('.');
-    this.fileService.addFile(name, extension);
+    this.fileService.addFile({ name, extension });
     this.dialogRef.close();
   }
 }

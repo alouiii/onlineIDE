@@ -11,11 +11,12 @@
         class="file"
         (contextmenu)="handleFileRightClick($event, file)"
         (click)="handleFileClick($event)"
+        [class.file-selected]="selectedFile === file"
       >
         <div *ngIf="showFileDropdownMap.get(file)" class="dropdown-menu">
           <ul>
             <li>Rename</li>
-            <li>Delete</li>
+            <li (click)="deleteFile()">Delete</li>
           </ul>
         </div>
         <mat-icon class="custom-icon">description</mat-icon
