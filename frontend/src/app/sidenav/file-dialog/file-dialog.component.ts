@@ -4,6 +4,7 @@ import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
+import { FileService } from 'src/app/services/file.service';
 
 @Component({
   selector: 'app-file-dialog',
@@ -38,5 +39,14 @@ export class FileDialogComponent {
   imports: [MatButtonModule, MatDialogModule, MatIconModule, MatDividerModule],
 })
 export class DialogAnimationsDialog {
-  constructor(public dialogRef: MatDialogRef<DialogAnimationsDialog>) {}
+  constructor(
+    public dialogRef: MatDialogRef<DialogAnimationsDialog>,
+    private fileService: FileService
+  ) {}
+
+  createFile(file: string) {
+    const [name, extension] = file.split('.');
+    this.fileService.addFile(name, extension);
+    this.dialogRef.close();
+  }
 }

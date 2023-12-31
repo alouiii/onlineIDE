@@ -7,11 +7,22 @@
   </h1>
   <mat-divider></mat-divider>
   <div class="dialog-content">
-    <input #newFile class="input-field" placeholder="Enter file name" />
+    <input
+      #newFile
+      class="input-field"
+      placeholder="Enter file name"
+      (keyup.enter)="createFile(newFile.value)"
+    />
   </div>
   <mat-divider></mat-divider>
   <div mat-dialog-actions style="display: flex; justify-content: flex-end">
-    <button mat-raised-button color="primary" mat-dialog-close cdkFocusInitial>
+    <button
+      mat-raised-button
+      color="primary"
+      mat-dialog-close
+      cdkFocusInitial
+      (click)="createFile(newFile.value)"
+    >
       Create
     </button>
   </div>

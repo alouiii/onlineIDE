@@ -1,15 +1,12 @@
 <mat-sidenav-container class="parent">
   <mat-sidenav #sidenav class="my-sidenav" mode="side" opened>
     <div class="back-button">
-      <button
-        mat-raised-button
-        color="primary"
-      >
+      <button mat-raised-button color="primary">
         <mat-icon>arrow_back</mat-icon> Back
       </button>
     </div>
     <h1>Project X</h1>
-    <div *ngIf="showInput">
+    <!--<div *ngIf="showInput">
       <input
         #newFile
         placeholder="add a file"
@@ -20,9 +17,11 @@
         class="lg-text-input"
         id="addFileInput"
       />
-    </div>
+    </div>-->
     <ul>
-      <li *ngFor="let file of files">{{ file.name + "." + file.extension }}</li>
+      <li *ngFor="let file of fileService.files">
+        {{ file.name + "." + file.extension }}
+      </li>
     </ul>
 
     <div class="buttons-container">

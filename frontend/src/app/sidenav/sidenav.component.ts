@@ -8,8 +8,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { File } from '../interfaces/file';
-import { MatDialog, MatDialogActions, MatDialogModule } from '@angular/material/dialog';
+import {
+  MatDialog,
+  MatDialogActions,
+  MatDialogModule,
+} from '@angular/material/dialog';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
+import { FileService } from '../services/file.service';
 
 @Component({
   selector: 'app-sidenav',
@@ -29,32 +34,11 @@ import { FileDialogComponent } from './file-dialog/file-dialog.component';
   ],
 })
 export class SidenavComponent {
-  constructor(private apiClient: ApiClientService, private dialog: MatDialog) {
+  constructor(
+    private apiClient: ApiClientService,
+    private dialog: MatDialog,
+    public fileService: FileService
+  ) {
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
-  }
-
-  showInput: boolean = false;
-
-  allFiles: File[] = [
-    {
-      name: 'ciao',
-      extension: 'c',
-    },
-  ];
-
-  get files() {
-    return this.allFiles;
-  }
-
-  addFile(name: string, extension: string) {
-    this.allFiles.unshift({
-      name,
-      extension,
-    });
-    this.showInput = false;
-  }
-
-  toggleInput() {
-    this.showInput = !this.showInput;
   }
 }
