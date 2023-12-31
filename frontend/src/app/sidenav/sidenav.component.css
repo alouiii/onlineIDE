@@ -4,7 +4,7 @@
 }
 
 .my-sidenav {
-  width: 300px;
+  width: 250px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -25,4 +25,18 @@
   text-align: left;
   padding-top: 20px;
   padding-left: 20px;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  padding-left: 30px;
+  height: 40px;
+  gap: 5px;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.file:hover {
+  background-color: #f0f0f0;
 }

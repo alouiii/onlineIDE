@@ -6,23 +6,12 @@
       </button>
     </div>
     <h1>Project X</h1>
-    <!--<div *ngIf="showInput">
-      <input
-        #newFile
-        placeholder="add a file"
-        (keyup.enter)="
-          addFile(newFile.value.split('.')[0], newFile.value.split('.')[1]);
-          newFile.value = ''
-        "
-        class="lg-text-input"
-        id="addFileInput"
-      />
-    </div>-->
-    <ul>
-      <li *ngFor="let file of fileService.files">
-        {{ file.name + "." + file.extension }}
-      </li>
-    </ul>
+    <div *ngFor="let file of fileService.files">
+      <div class="file">
+        <mat-icon class="custom-icon">description</mat-icon
+        >{{ file.name + "." + file.extension }}
+      </div>
+    </div>
 
     <div class="buttons-container">
       <app-file-dialog />
