@@ -9,9 +9,10 @@ import { HttpClientModule } from '@angular/common/http';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { ProjectsSectionComponent } from './components/projects-section/projects-section.component';
 
 @NgModule({
-  declarations: [AppComponent],
+  declarations: [AppComponent, ProjectsSectionComponent],
   imports: [
     BrowserModule,
     MonacoEditorModule.forRoot(),

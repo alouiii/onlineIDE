@@ -1,4 +1,11 @@
 <div class="parent">
-  <app-navbar />
-  <app-sidenav />
+  <app-navbar></app-navbar>
+
+  <ng-container *ngIf="isInsideProject; else projectsSection">
+    <app-sidenav></app-sidenav>
+  </ng-container>
+
+  <ng-template #projectsSection>
+    <app-projects-section></app-projects-section>
+  </ng-template>
 </div>
