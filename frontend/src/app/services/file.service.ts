@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { File } from '../interfaces/file';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -11,7 +12,9 @@ export class FileService {
     }
   }
 
-  allFiles: File[] = [
+  private currentFileSubject: Subject<File | null> = new Subject<File | null>();
+
+  private allFiles: File[] = [
     {
       id: 'a',
       fileName: 'ciao.js',
@@ -24,7 +27,16 @@ export class FileService {
     },
   ];
 
-  currentFile: File | null = null;
+  private _currentFile: File | null = null;
+
+  set currentFile(file: File | null) {
+    this._currentFile = file;
+    this.currentFileSubject.next(file);
+  }
+
+  get currentFile(): File | null {
+    return this._currentFile;
+  }
 
   selectedFile: File | null = null;
 
@@ -51,6 +63,10 @@ export class FileService {
     const index = this.allFiles.indexOf(file);
     if (index !== -1) {
       this.allFiles.splice(index, 1);
+      // If the removed file is the current file, set currentFile to null
+      if (this.currentFile === file) {
+        this.currentFile = null;
+      }
     }
   }
 
@@ -62,6 +78,15 @@ export class FileService {
         fileName: newName,
       };
       this.allFiles[index] = updatedFile;
+      // If the renamed file is the current file, update currentFile
+      if (this.currentFile === file) {
+        this.currentFile = updatedFile;
+      }
     }
+  }
+
+  // Observable to notify subscribers about changes in the currentFile
+  get currentFile$() {
+    return this.currentFileSubject.asObservable();
   }
 }
