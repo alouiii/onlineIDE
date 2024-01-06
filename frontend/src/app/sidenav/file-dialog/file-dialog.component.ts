@@ -37,16 +37,25 @@ export class FileDialogComponent {
   selector: 'dialog-animations-dialog',
   templateUrl: 'file-dialog-template.html',
   styleUrls: ['file-dialog-template.css'],
-  imports: [MatButtonModule, MatDialogModule, MatIconModule, MatDividerModule, FormsModule],
+  imports: [
+    MatButtonModule,
+    MatDialogModule,
+    MatIconModule,
+    MatDividerModule,
+    FormsModule,
+  ],
 })
 export class DialogAnimationsDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogAnimationsDialog>,
     public fileService: FileService
   ) {}
-  private createFile(file: string) {
-    const [name, extension] = file.split('.');
-    this.fileService.addFile({ name, extension });
+  private createFile(name: string) {
+    this.fileService.addFile({
+      id: 'a',
+      fileName: name,
+      code: '',
+    });
     this.dialogRef.close();
   }
 

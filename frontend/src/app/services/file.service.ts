@@ -9,16 +9,14 @@ export class FileService {
 
   allFiles: File[] = [
     {
-      name: 'ciao',
-      extension: 'c',
+      id: 'a',
+      fileName: 'ciao.c',
+      code: 'Hello World!',
     },
     {
-      name: 'ciao',
-      extension: 'c',
-    },
-    {
-      name: 'ciao',
-      extension: 'c',
+      id: 'b',
+      fileName: 'matteo.py',
+      code: 'Hello World!',
     },
   ];
 
@@ -51,8 +49,8 @@ export class FileService {
     const index = this.allFiles.indexOf(file);
     if (index !== -1) {
       const updatedFile: File = {
-        name: newName,
-        extension: file.extension,
+        ...file,
+        fileName: newName,
       };
       this.allFiles[index] = updatedFile;
     }
