@@ -2,19 +2,19 @@ import { Component, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
-import { ApiClientService } from '../services/api-client.service';
+import { ApiClientService } from '../../services/api-client.service';
 import { TerminalComponent } from '../terminal/terminal.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
-import { File } from '../interfaces/file';
+import { File } from '../../interfaces/file';
 import {
   MatDialog,
   MatDialogActions,
   MatDialogModule,
 } from '@angular/material/dialog';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
-import { FileService } from '../services/file.service';
+import { FileService } from '../../services/file.service';
 
 @Component({
   selector: 'app-sidenav',
