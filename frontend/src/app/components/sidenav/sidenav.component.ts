@@ -47,8 +47,6 @@ export class SidenavComponent {
   // Use a Map to store the showDropdown state for each file
   showFileDropdownMap: Map<File, boolean> = new Map();
 
-  //selectedFile: File | null = null; // Track the selected file
-
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();
 
@@ -83,8 +81,8 @@ export class SidenavComponent {
     return dropdownElement?.contains(event.target as Node) ?? false;
   }
 
-  handleFileClick(event: MouseEvent): void {
-    //console.log('Regular click event');
+  handleFileClick(event: MouseEvent, file: File): void {
+    this.fileService.updateCurrentFile(file)
   }
 
   deleteFile() {

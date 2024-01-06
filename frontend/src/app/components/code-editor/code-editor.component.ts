@@ -6,6 +6,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { HttpClient } from '@angular/common/http';
 import { CompileService } from '../../services/compile.service';
+import { FileService } from 'src/app/services/file.service';
 
 @Component({
   selector: 'app-code-editor',
@@ -21,16 +22,17 @@ import { CompileService } from '../../services/compile.service';
   ],
 })
 export class CodeEditorComponent {
+  constructor(
+    private httpClient: HttpClient,
+    private compileService: CompileService,
+    private fileService: FileService
+  ) {}
+
   editorOptions = {
     theme: 'vs-light',
     language: 'javascript',
   };
-  code: string = 'function x() {\nconsole.log("Hello world!");\n}';
-
-  constructor(
-    private httpClient: HttpClient,
-    private compileService: CompileService
-  ) {}
+  code: string = this.fileService.currentFile?.code ?? '';
 
   changeLanguage(event: Event) {
     const selectElement = event.target as HTMLSelectElement;

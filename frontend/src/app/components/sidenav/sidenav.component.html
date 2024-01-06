@@ -10,8 +10,9 @@
       <div
         class="file"
         (contextmenu)="handleFileRightClick($event, file)"
-        (click)="handleFileClick($event)"
+        (click)="handleFileClick($event, file)"
         [class.file-selected]="fileService.selectedFile === file"
+        [class.file-current]="fileService.currentFile === file"
       >
         <div *ngIf="showFileDropdownMap.get(file)" class="dropdown-menu">
           <ul>

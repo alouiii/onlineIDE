@@ -5,18 +5,22 @@ import { File } from '../interfaces/file';
   providedIn: 'root',
 })
 export class FileService {
-  constructor() {}
+  constructor() {
+    if (this.allFiles.length > 0) {
+      this.currentFile = this.allFiles[0];
+    }
+  }
 
   allFiles: File[] = [
     {
       id: 'a',
-      fileName: 'ciao.c',
-      code: 'Hello World!',
+      fileName: 'ciao.js',
+      code: 'function x() {\nconsole.log("Hello world!");\n}',
     },
     {
       id: 'b',
       fileName: 'matteo.py',
-      code: 'Hello World!',
+      code: 'print("Hello World")',
     },
   ];
 
@@ -30,12 +34,17 @@ export class FileService {
     this.selectedFile = file;
   }
 
+  updateCurrentFile(file: File | null) {
+    this.currentFile = file;
+  }
+
   get files() {
     return this.allFiles;
   }
 
   addFile(file: File) {
     this.allFiles.unshift(file);
+    this.currentFile = file;
   }
 
   removeFile(file: File) {

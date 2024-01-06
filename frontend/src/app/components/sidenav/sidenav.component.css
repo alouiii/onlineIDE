@@ -45,6 +45,10 @@
 .file-selected {
   background-color: #f0f0f0;
 }
+.file-current {
+  background-color: #3F51B5 !important;
+  color: white;
+}
 
 .dropdown-menu {
   position: absolute;
