@@ -47,6 +47,8 @@ export class SidenavComponent {
   // Use a Map to store the showDropdown state for each file
   showFileDropdownMap: Map<File, boolean> = new Map();
 
+  isDropdownOpened: boolean = false
+
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();
 
@@ -58,16 +60,19 @@ export class SidenavComponent {
     // Open the dropdown for the clicked file
     this.showFileDropdownMap.set(file, true);
 
+    this.isDropdownOpened = true
+
     this.fileService.updateSelectedFile(file);
 
     // Attach a click event listener to close the dropdown when clicking outside of it
     const outsideClickListener = (e: MouseEvent) => {
-      if (!this.isClickInsideDropdown(e) && !this.fileService.isRenaming) {
+      if (!this.isClickInsideDropdown(e) && !this.isDropdownOpened) {
         this.showFileDropdownMap.forEach((value, key) => {
           this.showFileDropdownMap.set(key, false);
         });
         this.fileService.updateSelectedFile(null);
         this.fileService.isRenaming = false;
+        this.isDropdownOpened = false
         document.removeEventListener('click', outsideClickListener);
       }
     };
@@ -77,12 +82,12 @@ export class SidenavComponent {
   }
 
   isClickInsideDropdown(event: MouseEvent): boolean {
-    const dropdownElement = document.querySelector('.dropdown-menu');
-    return dropdownElement?.contains(event.target as Node) ?? false;
-  }
+    const dropdownElement = document.getElementById('dropdown-id');
+    return dropdownElement ? dropdownElement.contains(event.target as Node) : false;
+  }  
 
   handleFileClick(event: MouseEvent, file: File): void {
-    this.fileService.updateCurrentFile(file)
+    this.fileService.updateCurrentFile(file);
   }
 
   deleteFile() {
@@ -91,7 +96,7 @@ export class SidenavComponent {
     }
   }
 
-  openFileModal() {
+  openModalToRename() {
     this.fileDialog.openDialog('200ms', '200ms');
     this.fileService.isRenaming = true;
     this.showFileDropdownMap.forEach((value, key) => {

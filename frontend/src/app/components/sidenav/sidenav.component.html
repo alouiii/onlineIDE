@@ -14,9 +14,13 @@
         [class.file-selected]="fileService.selectedFile === file"
         [class.file-current]="fileService.currentFile === file"
       >
-        <div *ngIf="showFileDropdownMap.get(file)" class="dropdown-menu">
+        <div
+          id="dropdown-id"
+          *ngIf="showFileDropdownMap.get(file)"
+          class="dropdown-menu"
+        >
           <ul>
-            <li (click)="openFileModal()">Rename</li>
+            <li (click)="openModalToRename()">Rename</li>
             <li (click)="deleteFile()">Delete</li>
           </ul>
         </div>

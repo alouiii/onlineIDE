@@ -50,19 +50,22 @@ export class DialogAnimationsDialog {
     public dialogRef: MatDialogRef<DialogAnimationsDialog>,
     public fileService: FileService
   ) {}
+
+  selectedFileName: string = this.fileService.selectedFile
+    ? this.fileService.selectedFile.fileName
+    : '';
+
   private createFile(name: string) {
     this.fileService.addFile({
       id: 'a',
       fileName: name,
       code: '',
     });
-    this.dialogRef.close();
   }
 
   private renameFile(newName: string) {
     if (this.fileService.selectedFile !== null) {
       this.fileService.renameFile(this.fileService.selectedFile, newName);
-      this.dialogRef.close();
       this.fileService.isRenaming = false;
     }
   }
@@ -74,6 +77,8 @@ export class DialogAnimationsDialog {
       this.createFile(newFileName);
     }
     // Close the dialog after either creating or renaming
+    this.fileService.isRenaming = false
+    this.fileService.updateSelectedFile(null)
     this.dialogRef.close();
   }
 }

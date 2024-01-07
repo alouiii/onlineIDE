@@ -14,6 +14,7 @@
       class="input-field"
       placeholder="{{ fileService.isRenaming ? 'Enter new file name' : 'Enter file name' }}"
       (keyup.enter)="performAction(newFile.value)"
+      [(ngModel)]="selectedFileName"
     />
   </div>
   <mat-divider></mat-divider>
