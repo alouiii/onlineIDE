@@ -12,7 +12,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ProjectsSectionComponent } from './components/projects-section/projects-section.component';
 
 @NgModule({
-  declarations: [AppComponent, ProjectsSectionComponent],
+  declarations: [AppComponent],
   imports: [
     BrowserModule,
     MonacoEditorModule.forRoot(),
@@ -20,7 +20,8 @@ import { ProjectsSectionComponent } from './components/projects-section/projects
     NavbarComponent,
     SidenavComponent,
     HttpClientModule,
-    MatButtonModule
+    MatButtonModule,
+    ProjectsSectionComponent,
   ],
   providers: [],
   bootstrap: [AppComponent],

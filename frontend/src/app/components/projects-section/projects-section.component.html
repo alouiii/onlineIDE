@@ -1,1 +1,37 @@
-<p>projects-section works!</p>
+<div class="container">
+  <h1>Project Management</h1>
+  <button mat-raised-button color="primary" class="add-project-button">
+    Add Project
+  </button>
+
+  <table class="styled-table">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Users</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr (mouseover)="onCellHover(true)" (mouseout)="onCellHover(false)">
+        <td>1</td>
+        <td>
+          <input
+            #projectName
+            [ngClass]="isEditable ? 'editable' : 'not-editable'"
+            [(ngModel)]="editedText"
+            (keyup.enter)="editCell(projectName.value)"
+            (blur)="onEditComplete()"
+            [value]="editedText"
+          />
+        </td>
+        <td>2</td>
+        <td>
+          <span class="open-link" (click)="openProject()">Open</span> |
+          <span class="delete-link" (click)="deleteProject()">Delete</span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
