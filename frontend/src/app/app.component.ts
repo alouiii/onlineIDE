@@ -9,4 +9,12 @@ export class AppComponent {
   title = 'frontend';
 
   isInsideProject: boolean = false;
+
+  handleProjectOpened() {
+    this.isInsideProject = true;
+  }
+
+  handleGoback() {
+    this.isInsideProject = false;
+  }
 }

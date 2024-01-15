@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 
@@ -14,6 +14,8 @@ export class ProjectsSectionComponent {
   isEditable: boolean = false;
   editedText: string = 'ciao';
 
+  @Output() projectOpened: EventEmitter<boolean> = new EventEmitter<boolean>();
+
   onCellHover(shouldEdit: boolean): void {
     this.isEditable = shouldEdit;
   }
@@ -26,7 +28,12 @@ export class ProjectsSectionComponent {
     this.isEditable = false;
   }
 
-  openProject() {}
+  openProject() {
+    //just to test
+    this.projectOpened.emit();
+  }
 
-  deleteProject() {}
+  deleteProject() {
+    console.log('delete project');
+  }
 }

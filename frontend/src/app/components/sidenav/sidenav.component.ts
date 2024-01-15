@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Output, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { CodeEditorComponent } from '../code-editor/code-editor.component';
@@ -42,12 +42,13 @@ export class SidenavComponent {
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 
+  @Output() fileOpened: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild('fileDialog') fileDialog!: FileDialogComponent;
 
   // Use a Map to store the showDropdown state for each file
   showFileDropdownMap: Map<File, boolean> = new Map();
 
-  isDropdownOpened: boolean = false
+  isDropdownOpened: boolean = false;
 
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();
@@ -60,7 +61,7 @@ export class SidenavComponent {
     // Open the dropdown for the clicked file
     this.showFileDropdownMap.set(file, true);
 
-    this.isDropdownOpened = true
+    this.isDropdownOpened = true;
 
     this.fileService.updateSelectedFile(file);
 
@@ -72,7 +73,7 @@ export class SidenavComponent {
         });
         this.fileService.updateSelectedFile(null);
         this.fileService.isRenaming = false;
-        this.isDropdownOpened = false
+        this.isDropdownOpened = false;
         document.removeEventListener('click', outsideClickListener);
       }
     };
@@ -83,8 +84,10 @@ export class SidenavComponent {
 
   isClickInsideDropdown(event: MouseEvent): boolean {
     const dropdownElement = document.getElementById('dropdown-id');
-    return dropdownElement ? dropdownElement.contains(event.target as Node) : false;
-  }  
+    return dropdownElement
+      ? dropdownElement.contains(event.target as Node)
+      : false;
+  }
 
   handleFileClick(event: MouseEvent, file: File): void {
     this.fileService.updateCurrentFile(file);
@@ -102,5 +105,9 @@ export class SidenavComponent {
     this.showFileDropdownMap.forEach((value, key) => {
       this.showFileDropdownMap.set(key, false);
     });
+  }
+
+  handleBack() {
+    this.fileOpened.emit();
   }
 }
