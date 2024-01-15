@@ -6,69 +6,57 @@
 }
 
 .add-project-button {
-  margin-top: 50px;
-  max-width: 100px;
+  margin-top: 20px;
+  align-self: flex-start;
 }
 
 .styled-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
-  border-radius: 5px;
-  overflow: hidden;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
 .styled-table thead tr {
-  background-color: #e8e8e8;
-  text-align: center;
-}
-
-.styled-table tr:hover {
-  background-color: #f0f0f0;
+  background-color: #1078c3;
+  color: #ffffff;
+  text-align: left;
 }
 
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;
-  border-right: 1px solid #dddddd;
-}
-
-.styled-table th:last-child,
-.styled-table td:last-child {
-  border-right: none;
-}
-
-.styled-table tbody tr {
   border-bottom: 1px solid #dddddd;
-  text-align: center;
+}
+
+.styled-table tbody tr:hover {
+  background-color: #f3f3f3;
+  cursor: default;
 }
 
 .editable {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background: #e7e7e7;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
-  padding: 10px;
-  background: none;
-  border: 1px solid black;
-  border-radius: 4px;
-  font-size: 15px;
-  text-align: center;
 }
 
-.not-editable {
-  background: none;
-  padding: 10px;
-  border: transparent;
-  font-size: 15px;
-  text-align: center;
+.editable:hover {
+  background: #dcdcdc;
 }
 
-.open-link {
-  cursor: pointer;
-  color: #3f51b5;
-  font-weight: 500;
-}
-
+.open-link,
 .delete-link {
-  cursor: pointer;
-  color: red;
-  font-weight: 500;
+  padding: 5px 10px;
+  transition: color 0.3s;
+}
+
+.open-link:hover {
+  color: #0056b3;
+}
+
+.delete-link:hover {
+  color: #d11a2a;
 }

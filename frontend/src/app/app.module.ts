@@ -21,6 +21,7 @@ import { ProjectsSectionComponent } from './components/projects-section/projects
     SidenavComponent,
     HttpClientModule,
     MatButtonModule,
+    MatIconModule,
     ProjectsSectionComponent,
   ],
   providers: [],

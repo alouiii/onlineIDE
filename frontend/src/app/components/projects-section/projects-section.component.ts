@@ -2,6 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { FileService } from 'src/app/services/file.service';
+import { File } from 'src/app/interfaces/file';
 
 @Component({
   selector: 'app-projects-section',
@@ -12,28 +14,97 @@ import { MatButtonModule } from '@angular/material/button';
 })
 export class ProjectsSectionComponent {
   isEditable: boolean = false;
-  editedText: string = 'ciao';
+  newProjectName: string = '';
+  projects: Array<{
+    id: number;
+    name: string;
+    users: number;
+    isEditable: boolean;
+  }> = [
+    { id: 1, name: 'Project 1', users: 2, isEditable: false },
+    { id: 2, name: 'Project 2', users: 1, isEditable: false },
+  ];
 
-  @Output() projectOpened: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() projectOpened: EventEmitter<number> = new EventEmitter<number>();
+  @Output() projectNameEdited: EventEmitter<string> =
+    new EventEmitter<string>();
 
   onCellHover(shouldEdit: boolean): void {
     this.isEditable = shouldEdit;
   }
 
-  editCell(text: string): void {
-    this.editedText = text;
+  constructor(private fileService: FileService) {}
+
+  ngOnInit(): void {
+    this.loadProjectsFromLocalStorage();
   }
 
-  onEditComplete(): void {
-    this.isEditable = false;
+  private loadProjectsFromLocalStorage() {
+    const storedProjects = localStorage.getItem('projects');
+    if (storedProjects) {
+      this.projects = JSON.parse(storedProjects);
+    }
   }
 
-  openProject() {
-    //just to test
-    this.projectOpened.emit();
+  private saveProjectsToLocalStorage() {
+    localStorage.setItem('projects', JSON.stringify(this.projects));
   }
 
-  deleteProject() {
-    console.log('delete project');
+  addProject(): void {
+    const newProjectId = this.generateUniqueProjectId();
+    const newProjectName = `Project ${newProjectId}`;
+
+    const newProject = {
+      id: newProjectId,
+      name: newProjectName,
+      users: 1,
+      isEditable: false,
+    };
+    this.projects.push(newProject);
+    localStorage.setItem('projects', JSON.stringify(this.projects));
+
+    const newFile: File = {
+      id: newProjectId.toString(),
+      fileName: `${newProjectName}.js`,
+      code: '// Initial code',
+      project: newProjectName,
+    };
+    this.fileService.addFile(newFile);
+    this.saveProjectsToLocalStorage();
+  }
+
+  private generateUniqueProjectId(): number {
+    let newProjectId = this.projects.length + 1;
+    while (this.projects.some((project) => project.id === newProjectId)) {
+      newProjectId++;
+    }
+    return newProjectId;
+  }
+
+  editProject(project: any): void {
+    project.isEditable = true;
+  }
+
+  saveProject(project: any): void {
+    project.isEditable = false;
+    this.fileService.renameFile(
+      { id: project.id.toString(), fileName: project.name, code: '' },
+      project.name
+    );
+  }
+
+  openProject(projectId: number): void {
+    const fileToOpen = this.fileService.files.find(
+      (file) => file.id === projectId.toString()
+    );
+    if (fileToOpen) {
+      this.fileService.updateCurrentFile(fileToOpen);
+    }
+    this.projectOpened.emit(projectId);
+  }
+
+  deleteProject(projectId: number): void {
+    this.projects = this.projects.filter((project) => project.id !== projectId);
+    this.saveProjectsToLocalStorage();
   }
 }
