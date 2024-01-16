@@ -1,4 +1,6 @@
 export interface File {
-    name: string
-    extension: string
+  id: string;
+  fileName: string;
+  code: string;
+  project?: string;
 }
