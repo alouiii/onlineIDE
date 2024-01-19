@@ -71,14 +71,14 @@ export class SidenavComponent {
     // Attach a click event listener to close the dropdown when clicking outside of it
     const outsideClickListener = (e: MouseEvent) => {
       if (!this.isClickInsideDropdown(e) && !this.isDropdownOpened) {
-        this.showFileDropdownMap.forEach((value, key) => {
-          this.showFileDropdownMap.set(key, false);
-        });
         this.fileService.updateSelectedFile(null);
         this.fileService.isRenaming = false;
-        this.isDropdownOpened = false;
-        document.removeEventListener('click', outsideClickListener);
       }
+      this.showFileDropdownMap.forEach((value, key) => {
+        this.showFileDropdownMap.set(key, false);
+      });
+      this.isDropdownOpened = false;
+      document.removeEventListener('click', outsideClickListener);
     };
 
     // Add the click event listener
