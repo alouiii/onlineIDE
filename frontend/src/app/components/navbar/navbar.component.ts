@@ -4,18 +4,30 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { ThemeService } from 'src/app/services/theme.service';
 
 @Component({
   standalone: true,
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
-  imports: [CommonModule, MatToolbarModule, MatIconModule, MatMenuModule],
+  imports: [
+    CommonModule,
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    MatSlideToggleModule,
+  ],
 })
 export class NavbarComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private themeService: ThemeService) {}
 
   logout() {
     this.router.navigate(['']);
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 }

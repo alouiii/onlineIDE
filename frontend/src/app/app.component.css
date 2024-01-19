@@ -2,3 +2,7 @@
   height: 100%;
   width: 100%;
 }
+.dark-theme {
+  background-color: #1e1e1e;
+  color: #ffffff;
+}
