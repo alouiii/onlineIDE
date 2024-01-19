@@ -1,0 +1,139 @@
+# Stages: 
+stages:
+  - build
+  - test 
+  - package
+
+# Backend Jobs: Project service
+backend_build:
+  stage: build
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git\shallow 2>nul || echo
+    - echo "Building the backend Project service"
+    - cd backend\project-service
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+
+backend_test:
+  stage: test
+  script:
+    - echo "Testing the backend"
+    - cd backend\project-service
+    #- mvn test  # TODO: setup this again when the project config is fixed
+
+backend_package:
+  stage: package
+  script:
+    - echo "Packaging the backend"
+    - cd backend\project-service
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+
+# Compiler Jobs
+compiler_build:
+  stage: build
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git\shallow 2>nul || echo
+    - echo "Building the compiler"
+    - cd compiler
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+
+compiler_test:
+  stage: test
+  script:
+    - echo "Testing the compiler"
+    - cd compiler
+    - mvn test
+
+compiler_package:
+  stage: package
+  script:
+    - echo "Packaging the compiler"
+    - cd compiler
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+
+# Dark-mode Jobs
+dark_mode_build:
+  stage: build
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git\shallow 2>nul || echo
+    - echo "Building the dark-mode"
+    - cd dark-mode\darkmode
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+
+dark_mode_test:
+  stage: test
+  script:
+    - echo "Testing the dark-mode"
+    - cd dark-mode\darkmode
+    #- mvn test ## TODO: add tests if needed
+
+dark_mode_package:
+  stage: package
+  script:
+    - echo "Packaging the dark-mode"
+    - cd dark-mode\darkmode
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+
+# Frontend Jobs
+# frontend_build:
+#   stage: build
+#   script:
+#     - echo "Building the frontend"
+#     - cd frontend
+#     - mvn clean compile
+
+# frontend_test:
+#   stage: test
+#   script:
+#     - echo "Testing the frontend"
+#     - cd frontend
+#     - mvn test
+
+# frontend_package:
+#   stage: package
+#   script:
+#     - echo "Packaging the frontend"
+#     - cd frontend
+#     - mvn package
+#   variables:
+#     MAVEN_OPTS: "-DskipTests=true"
+
+
+### This is a template for upcoming directories
+## Project Jobs
+# project_build:
+#   stage: build
+#   script:
+#     - echo "Building the project"
+#     - cd project
+#     - mvn clean compile
+
+# project_test:
+#   stage: test
+#   script:
+#     - echo "Testing the project"
+#     - cd project
+#     - mvn test
+
+# project_package:
+#   stage: package
+#   script:
+#     - echo "Packaging the project"
+#     - cd project
+#     - mvn package
+#   variables:
+#     MAVEN_OPTS: "-DskipTests=true"
