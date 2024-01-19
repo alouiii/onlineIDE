@@ -57,25 +57,6 @@ export class CodeEditorComponent implements OnDestroy {
     });
   }
 
-  run() {
-    const apiUrl = '/api/run'; // run API endpoint
-    const payload = {
-      language: this.editorOptions.language,
-      code: this.code,
-    };
-
-    //logs here will stay until tested with api, once the connection is confirmed it will be removed
-    console.log(`Sending code to ${apiUrl} for execution...`, payload);
-    this.httpClient.post(apiUrl, payload).subscribe({
-      next: (response) => {
-        console.log('Execution successful:', response);
-      },
-      error: (error) => {
-        console.error('Execution error:', error);
-      },
-    });
-  }
-
   ngOnDestroy() {
     // Unsubscribe to avoid memory leaks
     this.fileSubscription.unsubscribe();
