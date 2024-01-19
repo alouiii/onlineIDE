@@ -63,7 +63,6 @@ export class CodeEditorComponent implements OnDestroy {
       theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
       language: this.getLanguage(),
     };
-    console.log(this.editorOptions);
   }
 
   private getLanguage() {
