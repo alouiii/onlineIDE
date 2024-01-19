@@ -20,13 +20,14 @@
 .styled-table thead tr {
   background-color: #1078c3;
   color: #ffffff;
-  text-align: left;
+  text-align: center;
 }
 
 .styled-table th,
 .styled-table td {
   padding: 12px 15px;
   border-bottom: 1px solid #dddddd;
+  text-align: center;
 }
 
 .styled-table tbody tr:hover {
@@ -55,8 +56,10 @@
 
 .open-link:hover {
   color: #0056b3;
+  cursor: pointer;
 }
 
 .delete-link:hover {
   color: #d11a2a;
+  cursor: pointer;
 }
