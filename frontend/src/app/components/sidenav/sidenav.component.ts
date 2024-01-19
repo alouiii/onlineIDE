@@ -12,6 +12,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
 import { FileService } from '../../services/file.service';
 import { NavbarComponent } from '../navbar/navbar.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -35,12 +36,16 @@ export class SidenavComponent {
   constructor(
     private apiClient: ApiClientService,
     private dialog: MatDialog,
-    public fileService: FileService
+    public fileService: FileService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    this.route.params.subscribe((params) => {
+      console.log(params['projectId']);
+    });
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 
-  @Output() fileOpened: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild('fileDialog') fileDialog!: FileDialogComponent;
 
   // Use a Map to store the showDropdown state for each file
@@ -106,6 +111,6 @@ export class SidenavComponent {
   }
 
   handleBack() {
-    this.fileOpened.emit();
+    this.router.navigate(['/projects']);
   }
 }

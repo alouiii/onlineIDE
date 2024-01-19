@@ -7,7 +7,7 @@ import { NgModule } from '@angular/core';
 export const routes: Route[] = [
   { path: '', component: HomeComponent },
   { path: 'projects', component: ProjectsSectionComponent },
-  { path: 'editor', component: SidenavComponent },
+  { path: 'editor/:projectId', component: SidenavComponent },
 ];
 
 @NgModule({
