@@ -4,13 +4,14 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FileService } from 'src/app/services/file.service';
 import { File } from 'src/app/interfaces/file';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-projects-section',
   templateUrl: './projects-section.component.html',
   styleUrls: ['./projects-section.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, MatButtonModule],
+  imports: [FormsModule, CommonModule, MatButtonModule, NavbarComponent],
 })
 export class ProjectsSectionComponent {
   isEditable: boolean = false;

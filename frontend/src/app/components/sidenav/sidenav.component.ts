@@ -8,13 +8,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { File } from '../../interfaces/file';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
 import { FileService } from '../../services/file.service';
+import { NavbarComponent } from '../navbar/navbar.component';
 
 @Component({
   selector: 'app-sidenav',
@@ -31,6 +28,7 @@ import { FileService } from '../../services/file.service';
     MatIconModule,
     FileDialogComponent,
     MatDialogModule,
+    NavbarComponent,
   ],
 })
 export class SidenavComponent {
