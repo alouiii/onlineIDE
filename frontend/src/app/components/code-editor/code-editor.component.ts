@@ -9,6 +9,7 @@ import { CompileService } from '../../services/compile.service';
 import { FileService } from 'src/app/services/file.service';
 import { Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/services/theme.service';
+import { File } from 'src/app/interfaces/file';
 
 @Component({
   selector: 'app-code-editor',
@@ -43,19 +44,44 @@ export class CodeEditorComponent implements OnDestroy {
   ) {
     // Subscribe to changes in currentFile
     this.fileSubscription = this.fileService.currentFile$.subscribe((file) => {
-      this.code = file?.code ?? '';
+      this.updateEditorOptions(file);
     });
     // Subscribe to changes in isDarkMode
     this.isDarkModeSubscription = this.themeService.isDarkMode$.subscribe(
-      (isDarkMode) => {
+      () => {
         // React to changes in isDarkMode
-        this.isDarkMode = isDarkMode;
-        this.editorOptions = {
-          theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
-          language: 'javascript',
-        };
+        this.updateEditorOptions(this.fileService.currentFile);
       }
     );
+  }
+
+  private updateEditorOptions(file: File | null): void {
+    this.code = file?.code ?? '';
+    this.isDarkMode = this.themeService.isDarkMode;
+
+    this.editorOptions = {
+      theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
+      language: this.getLanguage(),
+    };
+    console.log(this.editorOptions);
+  }
+
+  private getLanguage() {
+    const fileExtension = this.fileService.currentFile?.fileName.split('.')[1];
+    switch (fileExtension) {
+      case 'js':
+        return 'javascript';
+      case 'py':
+        return 'python';
+      case 'java':
+        return 'java';
+      case 'c':
+        return 'c';
+      case 'cpp':
+        return 'cpp';
+      default:
+        return '';
+    }
   }
 
   save() {
