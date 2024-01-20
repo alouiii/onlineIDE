@@ -41,6 +41,8 @@ export class FileService {
 
   isRenaming: boolean = false;
 
+  isSharing: boolean = false;
+
   updateSelectedFile(file: File | null) {
     this.selectedFile = file;
   }
@@ -80,6 +82,10 @@ export class FileService {
         this.currentFile = updatedFile;
       }
     }
+  }
+
+  shareProject(username: string) {
+    console.log('share project with: ' + username);
   }
 
   get currentFile$() {

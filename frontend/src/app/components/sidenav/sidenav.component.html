@@ -28,7 +28,9 @@
 
     <div class="buttons-container">
       <app-file-dialog #fileDialog />
-      <button mat-raised-button color="primary">Share Project</button>
+      <button mat-raised-button color="primary" (click)="openModalToShare()">
+        Share Project
+      </button>
     </div>
   </mat-sidenav>
 

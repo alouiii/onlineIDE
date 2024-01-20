@@ -110,6 +110,11 @@ export class SidenavComponent {
     });
   }
 
+  openModalToShare() {
+    this.fileDialog.openDialog('200ms', '200ms');
+    this.fileService.isSharing = true;
+  }
+
   handleBack() {
     this.router.navigate(['/projects']);
   }

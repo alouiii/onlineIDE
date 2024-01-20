@@ -15,19 +15,25 @@ import { FormsModule } from '@angular/forms';
   imports: [MatButtonModule, MatDialogModule],
 })
 export class FileDialogComponent {
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private fileService: FileService) {}
 
   openDialog(
     enterAnimationDuration: string,
     exitAnimationDuration: string
   ): void {
-    this.dialog.open(DialogAnimationsDialog, {
+    const dialogRef = this.dialog.open(DialogAnimationsDialog, {
       width: '500px',
       enterAnimationDuration,
       exitAnimationDuration,
       position: {
         top: '10%',
       },
+    });
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.fileService.isRenaming = false;
+      this.fileService.isSharing = false;
+      this.fileService.updateSelectedFile(null);
     });
   }
 }
@@ -70,15 +76,23 @@ export class DialogAnimationsDialog {
     }
   }
 
-  performAction(newFileName: string): void {
+  private shareProject(username: string) {
+    this.fileService.shareProject(username);
+    this.fileService.isSharing = false;
+  }
+
+  performAction(inputValue: string): void {
     if (this.fileService.isRenaming) {
-      this.renameFile(newFileName);
+      this.renameFile(inputValue);
+    } else if (this.fileService.isSharing) {
+      this.shareProject(inputValue);
     } else {
-      this.createFile(newFileName);
+      this.createFile(inputValue);
     }
     // Close the dialog after either creating or renaming
-    this.fileService.isRenaming = false
-    this.fileService.updateSelectedFile(null)
+    this.fileService.isRenaming = false;
+    this.fileService.isSharing = false;
+    this.fileService.updateSelectedFile(null);
     this.dialogRef.close();
   }
 }
