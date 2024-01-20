@@ -4,13 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FileService } from 'src/app/services/file.service';
 import { File } from 'src/app/interfaces/file';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-projects-section',
   templateUrl: './projects-section.component.html',
   styleUrls: ['./projects-section.component.css'],
   standalone: true,
-  imports: [FormsModule, CommonModule, MatButtonModule],
+  imports: [FormsModule, CommonModule, MatButtonModule, NavbarComponent],
 })
 export class ProjectsSectionComponent {
   isEditable: boolean = false;
@@ -25,7 +27,6 @@ export class ProjectsSectionComponent {
     { id: 2, name: 'Project 2', users: 1, isEditable: false },
   ];
 
-  @Output() projectOpened: EventEmitter<number> = new EventEmitter<number>();
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
 
@@ -33,7 +34,7 @@ export class ProjectsSectionComponent {
     this.isEditable = shouldEdit;
   }
 
-  constructor(private fileService: FileService) {}
+  constructor(private fileService: FileService, private router: Router) {}
 
   ngOnInit(): void {
     this.loadProjectsFromLocalStorage();
@@ -100,7 +101,7 @@ export class ProjectsSectionComponent {
     if (fileToOpen) {
       this.fileService.updateCurrentFile(fileToOpen);
     }
-    this.projectOpened.emit(projectId);
+    this.router.navigate(['/editor/' + projectId]);
   }
 
   deleteProject(projectId: number): void {

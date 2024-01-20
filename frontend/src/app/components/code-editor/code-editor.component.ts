@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 import { CompileService } from '../../services/compile.service';
 import { FileService } from 'src/app/services/file.service';
 import { Subscription } from 'rxjs';
+import { ThemeService } from 'src/app/services/theme.service';
+import { File } from 'src/app/interfaces/file';
 
 @Component({
   selector: 'app-code-editor',
@@ -24,23 +26,62 @@ import { Subscription } from 'rxjs';
 })
 export class CodeEditorComponent implements OnDestroy {
   private fileSubscription: Subscription;
+  private isDarkModeSubscription: Subscription;
 
-  constructor(
-    private httpClient: HttpClient,
-    private compileService: CompileService,
-    private fileService: FileService
-  ) {
-    // Subscribe to changes in currentFile
-    this.fileSubscription = this.fileService.currentFile$.subscribe((file) => {
-      this.code = file?.code ?? '';
-    });
-  }
+  private isDarkMode: boolean = false;
 
-  editorOptions = {
+  editorOptions: { theme: string; language: string } = {
     theme: 'vs-light',
     language: 'javascript',
   };
   code: string = this.fileService.currentFile?.code ?? '';
+
+  constructor(
+    private httpClient: HttpClient,
+    private compileService: CompileService,
+    private fileService: FileService,
+    private themeService: ThemeService
+  ) {
+    // Subscribe to changes in currentFile
+    this.fileSubscription = this.fileService.currentFile$.subscribe((file) => {
+      this.updateEditorOptions(file);
+    });
+    // Subscribe to changes in isDarkMode
+    this.isDarkModeSubscription = this.themeService.isDarkMode$.subscribe(
+      () => {
+        // React to changes in isDarkMode
+        this.updateEditorOptions(this.fileService.currentFile);
+      }
+    );
+  }
+
+  private updateEditorOptions(file: File | null): void {
+    this.code = file?.code ?? '';
+    this.isDarkMode = this.themeService.isDarkMode;
+
+    this.editorOptions = {
+      theme: this.isDarkMode ? 'vs-dark' : 'vs-light',
+      language: this.getLanguage(),
+    };
+  }
+
+  private getLanguage() {
+    const fileExtension = this.fileService.currentFile?.fileName.split('.')[1];
+    switch (fileExtension) {
+      case 'js':
+        return 'javascript';
+      case 'py':
+        return 'python';
+      case 'java':
+        return 'java';
+      case 'c':
+        return 'c';
+      case 'cpp':
+        return 'cpp';
+      default:
+        return '';
+    }
+  }
 
   save() {
     localStorage.setItem('savedCode', this.code);
@@ -57,27 +98,9 @@ export class CodeEditorComponent implements OnDestroy {
     });
   }
 
-  run() {
-    const apiUrl = '/api/run'; // run API endpoint
-    const payload = {
-      language: this.editorOptions.language,
-      code: this.code,
-    };
-
-    //logs here will stay until tested with api, once the connection is confirmed it will be removed
-    console.log(`Sending code to ${apiUrl} for execution...`, payload);
-    this.httpClient.post(apiUrl, payload).subscribe({
-      next: (response) => {
-        console.log('Execution successful:', response);
-      },
-      error: (error) => {
-        console.error('Execution error:', error);
-      },
-    });
-  }
-
   ngOnDestroy() {
     // Unsubscribe to avoid memory leaks
     this.fileSubscription.unsubscribe();
+    this.isDarkModeSubscription.unsubscribe();
   }
 }
