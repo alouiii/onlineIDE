@@ -1,3 +1,4 @@
+<app-navbar></app-navbar>
 <mat-sidenav-container class="parent">
   <mat-sidenav #sidenav class="my-sidenav" mode="side" opened>
     <div class="back-button">
@@ -9,16 +10,13 @@
     <div *ngFor="let file of fileService.files">
       <div
         class="file"
+        id="dropdown-id"
         (contextmenu)="handleFileRightClick($event, file)"
         (click)="handleFileClick($event, file)"
         [class.file-selected]="fileService.selectedFile === file"
         [class.file-current]="fileService.currentFile === file"
       >
-        <div
-          id="dropdown-id"
-          *ngIf="showFileDropdownMap.get(file)"
-          class="dropdown-menu"
-        >
+        <div *ngIf="showFileDropdownMap.get(file)" class="dropdown-menu">
           <ul>
             <li (click)="openModalToRename()">Rename</li>
             <li (click)="deleteFile()">Delete</li>

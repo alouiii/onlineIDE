@@ -8,13 +8,11 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatButtonModule } from '@angular/material/button';
 import { File } from '../../interfaces/file';
-import {
-  MatDialog,
-  MatDialogActions,
-  MatDialogModule,
-} from '@angular/material/dialog';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 import { FileDialogComponent } from './file-dialog/file-dialog.component';
 import { FileService } from '../../services/file.service';
+import { NavbarComponent } from '../navbar/navbar.component';
+import { ActivatedRoute, Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidenav',
@@ -31,18 +29,23 @@ import { FileService } from '../../services/file.service';
     MatIconModule,
     FileDialogComponent,
     MatDialogModule,
+    NavbarComponent,
   ],
 })
 export class SidenavComponent {
   constructor(
     private apiClient: ApiClientService,
     private dialog: MatDialog,
-    public fileService: FileService
+    public fileService: FileService,
+    private router: Router,
+    private route: ActivatedRoute
   ) {
+    this.route.params.subscribe((params) => {
+      console.log(params['projectId']);
+    });
     //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
   }
 
-  @Output() fileOpened: EventEmitter<boolean> = new EventEmitter<boolean>();
   @ViewChild('fileDialog') fileDialog!: FileDialogComponent;
 
   // Use a Map to store the showDropdown state for each file
@@ -68,14 +71,14 @@ export class SidenavComponent {
     // Attach a click event listener to close the dropdown when clicking outside of it
     const outsideClickListener = (e: MouseEvent) => {
       if (!this.isClickInsideDropdown(e) && !this.isDropdownOpened) {
-        this.showFileDropdownMap.forEach((value, key) => {
-          this.showFileDropdownMap.set(key, false);
-        });
         this.fileService.updateSelectedFile(null);
         this.fileService.isRenaming = false;
-        this.isDropdownOpened = false;
-        document.removeEventListener('click', outsideClickListener);
       }
+      this.showFileDropdownMap.forEach((value, key) => {
+        this.showFileDropdownMap.set(key, false);
+      });
+      this.isDropdownOpened = false;
+      document.removeEventListener('click', outsideClickListener);
     };
 
     // Add the click event listener
@@ -108,6 +111,6 @@ export class SidenavComponent {
   }
 
   handleBack() {
-    this.fileOpened.emit();
+    this.router.navigate(['/projects']);
   }
 }

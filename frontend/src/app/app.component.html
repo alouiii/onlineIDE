@@ -1,13 +1,3 @@
 <div class="parent">
-  <app-navbar></app-navbar>
-
-  <ng-container *ngIf="isInsideProject; else projectsSection">
-    <app-sidenav (fileOpened)="handleGoback()"></app-sidenav>
-  </ng-container>
-
-  <ng-template #projectsSection>
-    <app-projects-section
-      (projectOpened)="handleProjectOpened()"
-    ></app-projects-section>
-  </ng-template>
+  <router-outlet></router-outlet>
 </div>
