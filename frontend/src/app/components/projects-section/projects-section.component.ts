@@ -7,6 +7,7 @@ import { File } from 'src/app/interfaces/file';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
+import { ApiClientService } from 'src/app/services/api-client.service';
 
 @Component({
   selector: 'app-projects-section',
@@ -18,15 +19,7 @@ import { Project } from 'src/app/interfaces/project';
 export class ProjectsSectionComponent {
   isEditable: boolean = false;
   newProjectName: string = '';
-  projects: Array<{
-    id: number;
-    name: string;
-    users: number;
-    isEditable: boolean;
-  }> = [
-    { id: 1, name: 'Project 1', users: 2, isEditable: false },
-    { id: 2, name: 'Project 2', users: 1, isEditable: false },
-  ];
+  projects: Project[] = [];
 
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
@@ -36,31 +29,33 @@ export class ProjectsSectionComponent {
     project.isEditable = shouldEdit;
   }
 
-  constructor(private fileService: FileService, private router: Router) {}
+  constructor(
+    private fileService: FileService,
+    private router: Router,
+    private apiClientService: ApiClientService
+  ) {}
 
   ngOnInit(): void {
-    this.loadProjectsFromLocalStorage();
+    this.loadProjects();
   }
 
-  private loadProjectsFromLocalStorage() {
-    const storedProjects = localStorage.getItem('projects');
-    if (storedProjects) {
-      this.projects = JSON.parse(storedProjects);
-    }
-  }
-
-  private saveProjectsToLocalStorage() {
-    localStorage.setItem('projects', JSON.stringify(this.projects));
+  private loadProjects() {
+    this.apiClientService
+      .getData('/project')
+      .subscribe((response: Project[]) => {
+        this.projects = response;
+        console.log('GET Projects: ', this.projects);
+      });
   }
 
   addProject(): void {
     const newProjectId = this.generateUniqueProjectId();
     const newProjectName = `Project ${newProjectId}`;
 
-    const newProject = {
-      id: newProjectId,
+    const newProject: Project = {
+      id: newProjectId.toString(),
       name: newProjectName,
-      users: 1,
+      userIds: ['1'],
       isEditable: false,
     };
     this.projects.push(newProject);
@@ -73,12 +68,13 @@ export class ProjectsSectionComponent {
       project: newProjectName,
     };
     this.fileService.addFile(newFile);
-    this.saveProjectsToLocalStorage();
   }
 
   private generateUniqueProjectId(): number {
     let newProjectId = this.projects.length + 1;
-    while (this.projects.some((project) => project.id === newProjectId)) {
+    while (
+      this.projects.some((project) => project.id === newProjectId.toString())
+    ) {
       newProjectId++;
     }
     return newProjectId;
@@ -91,11 +87,16 @@ export class ProjectsSectionComponent {
       { id: project.id.toString(), fileName: project.name, code: '' },
       project.name
     );
+    this.apiClientService
+      .updateData('/project/' + project.id, project)
+      .subscribe((response) => {
+        console.log('UPDATE project:', response);
+      });
   }
 
-  openProject(projectId: number): void {
+  openProject(projectId: string): void {
     const fileToOpen = this.fileService.files.find(
-      (file) => file.id === projectId.toString()
+      (file) => file.id === projectId
     );
     if (fileToOpen) {
       this.fileService.updateCurrentFile(fileToOpen);
@@ -103,8 +104,12 @@ export class ProjectsSectionComponent {
     this.router.navigate(['/editor/' + projectId]);
   }
 
-  deleteProject(projectId: number): void {
+  deleteProject(projectId: string): void {
     this.projects = this.projects.filter((project) => project.id !== projectId);
-    this.saveProjectsToLocalStorage();
+    this.apiClientService
+      .deleteData('/project/' + projectId)
+      .subscribe((response) => {
+        console.log('DELETE project:', response);
+      });
   }
 }
