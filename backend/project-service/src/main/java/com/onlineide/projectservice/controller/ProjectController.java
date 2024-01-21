@@ -3,9 +3,7 @@ package com.onlineide.projectservice.controller;
 import com.onlineide.projectservice.dto.FileResponse;
 import com.onlineide.projectservice.dto.ProjectRequest;
 import com.onlineide.projectservice.dto.ProjectResponse;
-import com.onlineide.projectservice.model.Project;
 import com.onlineide.projectservice.service.ProjectService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +20,7 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
+    @CrossOrigin
     public ProjectResponse createProject(@RequestBody Map<String, String> projectRequest) {
 
         return projectService.createProject(projectRequest.get("name"));
@@ -29,6 +28,7 @@ public class ProjectController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public List<ProjectResponse> getAllProjects() {
 
         return projectService.getAllProjects();
@@ -36,6 +36,7 @@ public class ProjectController {
 
     @GetMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public ProjectResponse getProjectById(@PathVariable String id) {
 
         return projectService.getProjectById(id);
@@ -43,6 +44,7 @@ public class ProjectController {
 
     @PutMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public ProjectResponse updateProjectName(@PathVariable String id, @RequestBody ProjectRequest projectRequest) {
 
         return projectService.updateProjectName(id, projectRequest);
@@ -50,6 +52,7 @@ public class ProjectController {
 
     @DeleteMapping("/{id}")
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public void deleteProject(@PathVariable String id) {
 
         projectService.deleteProject(id);
@@ -57,6 +60,7 @@ public class ProjectController {
 
     @PutMapping("/{id}/share")
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public ProjectResponse addUserToProject(@PathVariable String id, @RequestBody Map<String, String> userRequest) {
 
         return projectService.addUserToProject(id, userRequest.get("username"));
@@ -64,6 +68,7 @@ public class ProjectController {
 
     @PostMapping("/{id}/file")
     @ResponseStatus(code = HttpStatus.CREATED)
+    @CrossOrigin
     public FileResponse addFileToProject(@PathVariable String id, @RequestBody Map<String, String> fileRequest) {
 
         return projectService.addFileToProject(id, fileRequest.get("fileName"));
@@ -71,6 +76,7 @@ public class ProjectController {
 
     @GetMapping("/{id}/file")
     @ResponseStatus(code = HttpStatus.OK)
+    @CrossOrigin
     public List<FileResponse> getFilesFromProject(@PathVariable String id) {
 
         return projectService.getFilesFromProject(id);
