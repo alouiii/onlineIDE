@@ -1,7 +1,14 @@
 <app-navbar></app-navbar>
 <div class="container">
   <h1>Project Management</h1>
-  <button mat-raised-button color="primary" class="add-project-button" (click)="addProject()">Add Project</button>
+  <button
+    mat-raised-button
+    color="primary"
+    class="add-project-button"
+    (click)="addProject()"
+  >
+    Add Project
+  </button>
 
   <table class="styled-table">
     <thead>
@@ -13,20 +20,27 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let project of projects">
+      <tr
+        *ngFor="let project of projects"
+        (mouseover)="onCellHover(true, project)"
+        (mouseout)="onCellHover(false, project)"
+      >
         <td>{{ project.id }}</td>
         <td>
-          <div *ngIf="!project.isEditable" (click)="editProject(project)">
-            {{ project.name }}
-          </div>
-          <div *ngIf="project.isEditable">
-            <input [(ngModel)]="project.name" class="editable" (blur)="saveProject(project)" autofocus />
-          </div>
+          <input
+            #projectName
+            [ngClass]="project.isEditable ? 'editable' : 'not-editable'"
+            [(ngModel)]="project.name"
+            (blur)="saveProject(project)"
+          />
         </td>
         <td>{{ project.users }}</td>
         <td>
-          <span class="open-link" (click)="openProject(project.id)">Open</span> |
-          <span class="delete-link" (click)="deleteProject(project.id)">Delete</span>
+          <span class="open-link" (click)="openProject(project.id)">Open</span>
+          |
+          <span class="delete-link" (click)="deleteProject(project.id)"
+            >Delete</span
+          >
         </td>
       </tr>
     </tbody>

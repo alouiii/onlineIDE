@@ -6,6 +6,7 @@ import { FileService } from 'src/app/services/file.service';
 import { File } from 'src/app/interfaces/file';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
+import { Project } from 'src/app/interfaces/project';
 
 @Component({
   selector: 'app-projects-section',
@@ -30,8 +31,9 @@ export class ProjectsSectionComponent {
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
 
-  onCellHover(shouldEdit: boolean): void {
+  onCellHover(shouldEdit: boolean, project: any): void {
     this.isEditable = shouldEdit;
+    project.isEditable = shouldEdit;
   }
 
   constructor(private fileService: FileService, private router: Router) {}
@@ -82,12 +84,9 @@ export class ProjectsSectionComponent {
     return newProjectId;
   }
 
-  editProject(project: any): void {
-    project.isEditable = true;
-  }
-
   saveProject(project: any): void {
     project.isEditable = false;
+    this.isEditable = false;
     this.fileService.renameFile(
       { id: project.id.toString(), fileName: project.name, code: '' },
       project.name
