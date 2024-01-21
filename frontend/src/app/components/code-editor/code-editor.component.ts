@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy, SimpleChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MonacoEditorModule } from 'ngx-monaco-editor-v2';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,6 +36,10 @@ export class CodeEditorComponent implements OnDestroy {
   };
   code: string = this.fileService.currentFile?.code ?? '';
 
+  initialCode: string = this.fileService.currentFile?.code ?? '';
+
+  isFileSaved: boolean = true;
+
   constructor(
     private httpClient: HttpClient,
     private compileService: CompileService,
@@ -57,6 +61,7 @@ export class CodeEditorComponent implements OnDestroy {
 
   private updateEditorOptions(file: File | null): void {
     this.code = file?.code ?? '';
+    this.initialCode = file?.code ?? '';
     this.isDarkMode = this.themeService.isDarkMode;
 
     this.editorOptions = {
@@ -83,7 +88,17 @@ export class CodeEditorComponent implements OnDestroy {
     }
   }
 
+  handleCodeChange() {
+    if (this.initialCode != this.code) {
+      this.isFileSaved = false;
+    } else {
+      this.isFileSaved = true;
+    }
+  }
+
   save() {
+    this.isFileSaved = true;
+    this.initialCode = this.code;
     localStorage.setItem('savedCode', this.code);
   }
 
