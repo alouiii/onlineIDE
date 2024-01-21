@@ -50,24 +50,14 @@ export class ProjectsSectionComponent {
 
   addProject(): void {
     const newProjectId = this.generateUniqueProjectId();
-    const newProjectName = `Project ${newProjectId}`;
+    const newProjectName = `Project_${newProjectId}`;
 
-    const newProject: Project = {
-      id: newProjectId.toString(),
-      name: newProjectName,
-      userIds: ['1'],
-      isEditable: false,
-    };
-    this.projects.push(newProject);
-    localStorage.setItem('projects', JSON.stringify(this.projects));
-
-    const newFile: File = {
-      id: newProjectId.toString(),
-      fileName: `${newProjectName}.js`,
-      code: '// Initial code',
-      project: newProjectName,
-    };
-    this.fileService.addFile(newFile);
+    this.apiClientService
+      .postData('/project', { name: newProjectName })
+      .subscribe((response: Project) => {
+        console.log('POST project: ', response);
+        this.projects.push(response);
+      });
   }
 
   private generateUniqueProjectId(): number {

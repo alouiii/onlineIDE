@@ -10,6 +10,14 @@
   align-self: flex-start;
 }
 
+.empty-message {
+  padding-top: 100px;
+  margin: auto;
+  color: #4c4646;
+  font-size: 25px;
+  font-weight: 400;
+}
+
 .styled-table {
   width: 100%;
   border-collapse: collapse;

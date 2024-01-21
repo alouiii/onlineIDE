@@ -10,7 +10,9 @@
     Add Project
   </button>
 
-  <table class="styled-table">
+  <span class="empty-message" *ngIf="projects.length === 0">There are no projects yet</span>
+
+  <table *ngIf="projects.length > 0" class="styled-table">
     <thead>
       <tr>
         <th>ID</th>

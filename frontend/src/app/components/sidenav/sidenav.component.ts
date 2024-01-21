@@ -13,6 +13,7 @@ import { FileDialogComponent } from './file-dialog/file-dialog.component';
 import { FileService } from '../../services/file.service';
 import { NavbarComponent } from '../navbar/navbar.component';
 import { ActivatedRoute, Router } from '@angular/router';
+import { Project } from 'src/app/interfaces/project';
 
 @Component({
   selector: 'app-sidenav',
@@ -34,17 +35,12 @@ import { ActivatedRoute, Router } from '@angular/router';
 })
 export class SidenavComponent {
   constructor(
-    private apiClient: ApiClientService,
+    private apiClientService: ApiClientService,
     private dialog: MatDialog,
     public fileService: FileService,
     private router: Router,
     private route: ActivatedRoute
-  ) {
-    this.route.params.subscribe((params) => {
-      console.log(params['projectId']);
-    });
-    //this.apiClient.getData('/todos').subscribe((data) => console.log(data)); just an example of call
-  }
+  ) {}
 
   @ViewChild('fileDialog') fileDialog!: FileDialogComponent;
 
@@ -52,6 +48,24 @@ export class SidenavComponent {
   showFileDropdownMap: Map<File, boolean> = new Map();
 
   isDropdownOpened: boolean = false;
+
+  currentProject: Project | null = null;
+
+  ngOnInit(): void {
+    this.loadProject();
+  }
+
+  private loadProject() {
+    this.route.params.subscribe((params) => {
+      const projectId = params['projectId'];
+      this.apiClientService
+        .getData('/project/' + projectId)
+        .subscribe((response: Project) => {
+          this.currentProject = response;
+          console.log('GET Project: ', response);
+        });
+    });
+  }
 
   handleFileRightClick(event: MouseEvent, file: File): void {
     event.preventDefault();

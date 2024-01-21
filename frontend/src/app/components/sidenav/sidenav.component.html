@@ -6,7 +6,9 @@
         <mat-icon>arrow_back</mat-icon> Back
       </button>
     </div>
-    <h1>Project X</h1>
+    <h1 class="project-name">
+      {{ currentProject?.name }}
+    </h1>
     <div *ngFor="let file of fileService.files">
       <div
         class="file"
