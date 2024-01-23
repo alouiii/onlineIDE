@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { File } from '../interfaces/file';
 import { Subject } from 'rxjs';
+import { ApiClientService } from './api-client.service';
+import { Project } from '../interfaces/project';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +24,7 @@ export class FileService {
 
   private _currentFile: File | null = null;
 
-  constructor() {
+  constructor(private apiClientService: ApiClientService) {
     if (this.allFiles.length > 0) {
       this.currentFile = this.allFiles[0];
     }
@@ -38,6 +40,8 @@ export class FileService {
   }
 
   selectedFile: File | null = null;
+
+  currentProject: Project | null = null;
 
   isRenaming: boolean = false;
 
@@ -85,7 +89,15 @@ export class FileService {
   }
 
   shareProject(username: string) {
-    console.log('share project with: ' + username);
+    if (this.currentProject !== null) {
+      this.apiClientService
+        .updateData(`/project/${this.currentProject?.id}/share`, {
+          username,
+        })
+        .subscribe((response: Project) => {
+          console.log('share project: ', response);
+        });
+    }
   }
 
   get currentFile$() {

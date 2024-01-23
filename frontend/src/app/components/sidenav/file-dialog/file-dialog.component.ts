@@ -6,6 +6,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { FileService } from 'src/app/services/file.service';
 import { FormsModule } from '@angular/forms';
+import { Project } from 'src/app/interfaces/project';
+import { ApiClientService } from 'src/app/services/api-client.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-file-dialog',
@@ -54,7 +57,9 @@ export class FileDialogComponent {
 export class DialogAnimationsDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogAnimationsDialog>,
-    public fileService: FileService
+    public fileService: FileService,
+    private apiClientService: ApiClientService,
+    private router: Router
   ) {}
 
   selectedFileName: string = this.fileService.selectedFile
@@ -79,6 +84,7 @@ export class DialogAnimationsDialog {
   private shareProject(username: string) {
     this.fileService.shareProject(username);
     this.fileService.isSharing = false;
+    this.router.navigate(['/projects']);
   }
 
   performAction(inputValue: string): void {

@@ -49,8 +49,6 @@ export class SidenavComponent {
 
   isDropdownOpened: boolean = false;
 
-  currentProject: Project | null = null;
-
   ngOnInit(): void {
     this.loadProject();
   }
@@ -61,7 +59,7 @@ export class SidenavComponent {
       this.apiClientService
         .getData('/project/' + projectId)
         .subscribe((response: Project) => {
-          this.currentProject = response;
+          this.fileService.currentProject = response;
           console.log('GET Project: ', response);
         });
     });
