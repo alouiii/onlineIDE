@@ -9,26 +9,10 @@ import { Project } from '../interfaces/project';
 })
 export class FileService {
   private currentFileSubject: Subject<File | null> = new Subject<File | null>();
-  private allFiles: File[] = [
-    {
-      id: '1',
-      fileName: 'Project 1.js',
-      code: 'function x() {\nconsole.log("Hello world!");\n}',
-    },
-    {
-      id: '2',
-      fileName: 'Project 2.py',
-      code: 'print("Hello World")',
-    },
-  ];
 
   private _currentFile: File | null = null;
 
-  constructor(private apiClientService: ApiClientService) {
-    if (this.allFiles.length > 0) {
-      this.currentFile = this.allFiles[0];
-    }
-  }
+  constructor(private apiClientService: ApiClientService) {}
 
   set currentFile(file: File | null) {
     this._currentFile = file;
@@ -43,6 +27,8 @@ export class FileService {
 
   currentProject: Project | null = null;
 
+  currentProjectFiles: File[] = [];
+
   isRenaming: boolean = false;
 
   isSharing: boolean = false;
@@ -56,18 +42,24 @@ export class FileService {
   }
 
   get files() {
-    return this.allFiles;
+    return this.currentProjectFiles;
   }
 
-  addFile(file: File) {
-    this.allFiles.unshift(file);
-    this.currentFile = file;
+  addFile(fileName: string) {
+    this.apiClientService
+      .postData(`/project/${this.currentProject?.id}/file`, {
+        fileName,
+      })
+      .subscribe((response: File) => {
+        this.currentProjectFiles.push(response);
+        this.currentFile = response;
+      });
   }
 
   removeFile(file: File) {
-    const index = this.allFiles.indexOf(file);
+    const index = this.currentProjectFiles.indexOf(file);
     if (index !== -1) {
-      this.allFiles.splice(index, 1);
+      this.currentProjectFiles.splice(index, 1);
       if (this.currentFile === file) {
         this.currentFile = null;
       }
@@ -75,13 +67,13 @@ export class FileService {
   }
 
   renameFile(file: File, newName: string) {
-    const index = this.allFiles.indexOf(file);
+    const index = this.currentProjectFiles.indexOf(file);
     if (index !== -1) {
       const updatedFile: File = {
         ...file,
         fileName: newName,
       };
-      this.allFiles[index] = updatedFile;
+      this.currentProjectFiles[index] = updatedFile;
       if (this.currentFile === file) {
         this.currentFile = updatedFile;
       }

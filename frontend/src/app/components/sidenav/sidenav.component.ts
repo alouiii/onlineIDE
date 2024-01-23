@@ -57,9 +57,12 @@ export class SidenavComponent {
     this.route.params.subscribe((params) => {
       const projectId = params['projectId'];
       this.apiClientService
-        .getData('/project/' + projectId)
-        .subscribe((response: Project) => {
-          this.fileService.currentProject = response;
+        .getData('/project/' + projectId + '/file')
+        .subscribe((response: File[]) => {
+          if (response.length > 0) {
+            this.fileService.currentProject = response[0].project ?? null;
+          }
+          this.fileService.currentProjectFiles = response;
           console.log('GET Project: ', response);
         });
     });

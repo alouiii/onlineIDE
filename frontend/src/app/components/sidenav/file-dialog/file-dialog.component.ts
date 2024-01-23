@@ -67,11 +67,7 @@ export class DialogAnimationsDialog {
     : '';
 
   private createFile(name: string) {
-    this.fileService.addFile({
-      id: 'a',
-      fileName: name,
-      code: '',
-    });
+    this.fileService.addFile(name);
   }
 
   private renameFile(newName: string) {
