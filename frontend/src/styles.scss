@@ -21,7 +21,8 @@ body {
 }
 
 h1,
-td {
+td,
+input {
   color: var(--color);
 }
 
@@ -29,7 +30,7 @@ tbody tr:hover {
   background-color: var(--bg-table-color);
 }
 
-:root{
+:root {
   --bg-color: #{$light-bg-color};
   --color: #{$light-text-color};
   --bg-table-color: #{$light-bg-table-color};
