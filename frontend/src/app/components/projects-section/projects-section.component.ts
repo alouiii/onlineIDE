@@ -20,6 +20,7 @@ export class ProjectsSectionComponent {
   isEditable: boolean = false;
   newProjectName: string = '';
   projects: Project[] = [];
+  showUserIds: boolean = false;
 
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
@@ -27,6 +28,10 @@ export class ProjectsSectionComponent {
   onCellHover(shouldEdit: boolean, project: any): void {
     this.isEditable = shouldEdit;
     project.isEditable = shouldEdit;
+  }
+
+  onClickUsers() {
+    this.showUserIds = !this.showUserIds;
   }
 
   constructor(

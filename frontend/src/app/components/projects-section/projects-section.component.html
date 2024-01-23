@@ -10,7 +10,9 @@
     Add Project
   </button>
 
-  <span class="empty-message" *ngIf="projects.length === 0">There are no projects yet</span>
+  <span class="empty-message" *ngIf="projects.length === 0"
+    >There are no projects yet</span
+  >
 
   <table *ngIf="projects.length > 0" class="styled-table">
     <thead>
@@ -36,7 +38,16 @@
             (blur)="saveProject(project)"
           />
         </td>
-        <td>{{ project.userIds.length }}</td>
+        <td (click)="onClickUsers()" style="cursor: pointer">
+          <div *ngIf="showUserIds">
+            <ul class="userIds">
+              <li *ngFor="let userId of project.userIds">{{ userId }}</li>
+            </ul>
+          </div>
+          <div *ngIf="!showUserIds">
+            {{ project.userIds.length }}
+          </div>
+        </td>
         <td>
           <span class="open-link" (click)="openProject(project.id)">Open</span>
           |
