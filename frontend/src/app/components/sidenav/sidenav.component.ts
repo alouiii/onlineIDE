@@ -63,6 +63,7 @@ export class SidenavComponent {
             this.fileService.currentProject = response[0].project ?? null;
           }
           this.fileService.currentProjectFiles = response;
+          this.fileService.currentFile = response[0];
           console.log('GET Project: ', response);
         });
     });

@@ -10,6 +10,7 @@ import { FileService } from 'src/app/services/file.service';
 import { Subscription } from 'rxjs';
 import { ThemeService } from 'src/app/services/theme.service';
 import { File } from 'src/app/interfaces/file';
+import { ApiClientService } from 'src/app/services/api-client.service';
 
 @Component({
   selector: 'app-code-editor',
@@ -41,10 +42,10 @@ export class CodeEditorComponent implements OnDestroy {
   isFileSaved: boolean = true;
 
   constructor(
-    private httpClient: HttpClient,
     private compileService: CompileService,
     private fileService: FileService,
-    private themeService: ThemeService
+    private themeService: ThemeService,
+    private apiClientService: ApiClientService
   ) {
     // Subscribe to changes in currentFile
     this.fileSubscription = this.fileService.currentFile$.subscribe((file) => {
@@ -97,9 +98,15 @@ export class CodeEditorComponent implements OnDestroy {
   }
 
   save() {
-    this.isFileSaved = true;
-    this.initialCode = this.code;
-    localStorage.setItem('savedCode', this.code);
+    const fileId = this.fileService.currentFile?.id;
+    this.apiClientService
+      .updateData(`/file/${fileId}`, { code: this.code })
+      .subscribe((response) => {
+        console.log('FILE saved');
+        console.log(response);
+        this.isFileSaved = true;
+        this.initialCode = this.code;
+      });
   }
 
   compile() {

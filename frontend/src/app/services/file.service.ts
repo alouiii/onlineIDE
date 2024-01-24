@@ -57,27 +57,35 @@ export class FileService {
   }
 
   removeFile(file: File) {
-    const index = this.currentProjectFiles.indexOf(file);
-    if (index !== -1) {
-      this.currentProjectFiles.splice(index, 1);
-      if (this.currentFile === file) {
-        this.currentFile = null;
+    this.apiClientService.deleteData(`/file/${file.id}`).subscribe(() => {
+      console.log('DELETE file');
+      const index = this.currentProjectFiles.indexOf(file);
+      if (index !== -1) {
+        this.currentProjectFiles.splice(index, 1);
+        if (this.currentFile === file) {
+          this.currentFile = null;
+        }
       }
-    }
+    });
   }
 
   renameFile(file: File, newName: string) {
-    const index = this.currentProjectFiles.indexOf(file);
-    if (index !== -1) {
-      const updatedFile: File = {
-        ...file,
-        fileName: newName,
-      };
-      this.currentProjectFiles[index] = updatedFile;
-      if (this.currentFile === file) {
-        this.currentFile = updatedFile;
-      }
-    }
+    this.apiClientService
+      .updateData(`/file/${file.id}`, { fileName: newName })
+      .subscribe(() => {
+        console.log('RENAME file');
+        const index = this.currentProjectFiles.indexOf(file);
+        if (index !== -1) {
+          const updatedFile: File = {
+            ...file,
+            fileName: newName,
+          };
+          this.currentProjectFiles[index] = updatedFile;
+          if (this.currentFile === file) {
+            this.currentFile = updatedFile;
+          }
+        }
+      });
   }
 
   shareProject(username: string) {
