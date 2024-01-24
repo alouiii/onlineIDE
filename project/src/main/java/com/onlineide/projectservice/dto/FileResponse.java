@@ -25,7 +25,7 @@ public class FileResponse {
                 .map(file -> FileResponse.builder()
                         .id(file.getId())
                         .fileName(file.getName())
-                        .code(file.getCode())
+                        .code(file.getCode() == null ? "" : file.getCode())
                         .project(ProjectResponse.fromProject(file.getProject()))
                         .build())
                 .toList();
@@ -36,7 +36,7 @@ public class FileResponse {
             return FileResponse.builder()
                     .id(file.getId())
                     .fileName(file.getName())
-                    .code(file.getCode())
+                    .code(file.getCode() == null ? "" : file.getCode())
                     .project(ProjectResponse.fromProject(file.getProject()))
                     .build();
     }
