@@ -1,0 +1,19 @@
+spring:
+  application:
+    name: api-gateway
+  cloud:
+    gateway:
+      routes:
+        - id: project-service
+          uri: lb://project-service
+          predicates:
+            - Path=/api/project
+          filters:
+            - StripPrefix=1
+        - id: compiler-service
+          uri: lb://compiler-service
+          predicates:
+            - Path=/compile
+          filters:
+            - StripPrefix=1
+
