@@ -18,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -85,7 +82,12 @@ public class ProjectService {
             log.info("get projects: {}", projects.stream()
                     .map(Project::getName)
                     .collect(Collectors.joining(", ")));
-            return new ResponseEntity<>(ProjectResponse.fromProjects(projects), HttpStatus.OK);
+
+            List<Project> sortedProject = projects.stream()
+                    .sorted(Comparator.comparing(Project::getName, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+
+            return new ResponseEntity<>(ProjectResponse.fromProjects(sortedProject), HttpStatus.OK);
         } catch (Exception e) {
             log.info("error getting projects: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -186,7 +188,13 @@ public class ProjectService {
         try {
             Project project = projectRepository.findById(id).orElseThrow();
             log.info("get files from project: {}", project.getName());
-            return new ResponseEntity<>(FileResponse.fromFiles(project.getFiles()), HttpStatus.OK);
+
+            // Sort files by name in alphabetical order
+            List<File> sortedFiles = project.getFiles().stream()
+                    .sorted(Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+
+            return new ResponseEntity<>(FileResponse.fromFiles(sortedFiles), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             log.info("project with id: {} not found", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
