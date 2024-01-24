@@ -25,6 +25,7 @@ public class FileService {
             log.info("Updating file with id: {}", id);
             File file = fileRepository.findById(id)
                     .orElseThrow(() -> new RuntimeException("File not found with id: " + id));
+            file.setName(fileRequest.getName());
             file.setCode(fileRequest.getCode());
             fileRepository.save(file);
             return ResponseEntity.ok().body(FileResponse.fromFile(file));
