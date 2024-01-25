@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.concurrent.TimeUnit;
 
 @SpringBootApplication
+@EnableEurekaClient
 @RestController
 public class DarkmodeApplication {
 	private boolean isDarkModeEnabled = false;
