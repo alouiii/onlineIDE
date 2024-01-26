@@ -89,13 +89,14 @@ export class ProjectsSectionComponent {
       });
   }
 
-  openProject(projectId: string): void {
+  openProject(projectId: string, projectName: string): void {
     const fileToOpen = this.fileService.files.find(
       (file) => file.id === projectId
     );
     if (fileToOpen) {
       this.fileService.updateCurrentFile(fileToOpen);
     }
+    this.fileService.currentProjectName = projectName;
     this.router.navigate(['/editor/' + projectId]);
   }
 

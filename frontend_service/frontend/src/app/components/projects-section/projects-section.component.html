@@ -49,7 +49,11 @@
           </div>
         </td>
         <td>
-          <span class="open-link" (click)="openProject(project.id)">Open</span>
+          <span
+            class="open-link"
+            (click)="openProject(project.id, project.name)"
+            >Open</span
+          >
           |
           <span class="delete-link" (click)="deleteProject(project.id)"
             >Delete</span

@@ -27,6 +27,8 @@ export class FileService {
 
   currentProject: Project | null = null;
 
+  currentProjectName: string = '';
+
   currentProjectFiles: File[] = [];
 
   isRenaming: boolean = false;
