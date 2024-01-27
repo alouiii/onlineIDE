@@ -6,8 +6,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatDividerModule } from '@angular/material/divider';
 import { FileService } from 'src/app/services/file.service';
 import { FormsModule } from '@angular/forms';
-import { Project } from 'src/app/interfaces/project';
-import { ApiClientService } from 'src/app/services/api-client.service';
 import { Router } from '@angular/router';
 
 @Component({
@@ -58,7 +56,6 @@ export class DialogAnimationsDialog {
   constructor(
     public dialogRef: MatDialogRef<DialogAnimationsDialog>,
     public fileService: FileService,
-    private apiClientService: ApiClientService,
     private router: Router
   ) {}
 

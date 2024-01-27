@@ -123,7 +123,6 @@ export class ProjectsSectionComponent {
       if (fileToOpen) {
         this.fileService.updateCurrentFile(fileToOpen);
       }
-      this.fileService.currentProjectName = project.name;
       this.router.navigate(['/editor/' + project.id]);
     }
   }
