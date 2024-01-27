@@ -32,7 +32,7 @@ CActLED CKernel::ActLED; // initialize built-in LED (if available)
 bool flag;
 
 // Assuming pNetSubSystem is an instance of CNetSubSystem
-u8 pIPAddress[] = {192, 168, 31, 147}; // IP address
+u8 pIPAddress[] = {192, 168, 31, 1}; // IP address
 u8 pNetMask[] = {255, 255, 255, 0};
 
 u8 pDefaultGateway[] = {192, 168, 31, 1};
@@ -163,7 +163,7 @@ TShutdownMode CKernel::Run (void)
             CSocket *pSocket2 = new CSocket(&m_Net, IPPROTO_TCP);
 
             // Define target IP address and port
-            u8 TargetIPArray2[] = {169, 254, 71, 91};
+            u8 TargetIPArray2[] = {192, 168, 31, 147};
             CIPAddress ForeignIP2(TargetIPArray2);
             u16 nForeignPort2 = 8080;
 
