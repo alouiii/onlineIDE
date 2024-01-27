@@ -32,11 +32,11 @@ CActLED CKernel::ActLED; // initialize built-in LED (if available)
 bool flag;
 
 // Assuming pNetSubSystem is an instance of CNetSubSystem
-u8 pIPAddress[] = {169,254,104,16}; // IP address
-u8 pNetMask[] = {255, 255, 0, 0};
+u8 pIPAddress[] = {192, 168, 31, 147}; // IP address
+u8 pNetMask[] = {255, 255, 255, 0};
 
-u8 pDefaultGateway[] = {8, 8, 8, 8};
-u8 pDNSServer[] = {8, 8, 8, 8};
+u8 pDefaultGateway[] = {192, 168, 31, 1};
+u8 pDNSServer[] = {192, 168, 31, 1};
 
 const char* pHostname = "MyDevice";
 
@@ -56,7 +56,7 @@ CKernel::CKernel (void)
 {
 	ActLED.Blink (5);		// show we are alive
 	// TODO: initialize LED as off
-    flag = false;
+    flag = true;
 
 }
 
@@ -184,7 +184,7 @@ TShutdownMode CKernel::Run (void)
             m_GPIO18.Write(LOW);
 
             // Reset flag
-            flag = false;
+            // flag = false;
         }
 
 
