@@ -17,6 +17,24 @@ export class ThemeService {
     this.isDarkModeSubject.next(value);
   }
 
+  constructor() {
+    // Initialize SSE connection
+    this.connectToSSE();
+  }
+
+  connectToSSE() {
+    console.log("connectToSSE function !!");
+    const eventSource = new EventSource('http://localhost:8080/sse/theme/connect');
+    console.log(eventSource);
+    
+    eventSource.addEventListener('connect', (event: any) => {
+      console.log("connected");
+    });
+    eventSource.addEventListener('theme-change', (event: any) => {
+      this.toggleTheme();
+    });
+  }
+
   toggleTheme() {
     if (!this.isDarkMode) {
       //lightMode
