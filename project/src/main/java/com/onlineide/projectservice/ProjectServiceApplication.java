@@ -13,10 +13,6 @@ public class ProjectServiceApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ProjectServiceApplication.class, args);
 	}
-
-	@Bean
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+	
 
 }
