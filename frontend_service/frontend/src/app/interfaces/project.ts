@@ -5,4 +5,5 @@ export interface Project {
   name: string;
   userIds: string[];
   isEditable?: boolean;
+  hasErrors?: boolean;
 }

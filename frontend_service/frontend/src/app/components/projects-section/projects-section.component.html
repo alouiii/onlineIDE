@@ -1,14 +1,20 @@
 <app-navbar></app-navbar>
 <div class="container">
   <h1>Project Management</h1>
-  <button
-    mat-raised-button
-    color="primary"
-    class="add-project-button"
-    (click)="addProject()"
-  >
-    Add Project
-  </button>
+  <div class="button-container">
+    <button
+      mat-raised-button
+      color="primary"
+      class="add-project-button"
+      (click)="addProject()"
+    >
+      Add Project
+    </button>
+
+    <span class="error-message" *ngIf="errorMessage.length > 0">{{
+      errorMessage
+    }}</span>
+  </div>
 
   <span class="empty-message" *ngIf="projects.length === 0"
     >There are no projects yet</span
@@ -33,9 +39,15 @@
         <td>
           <input
             #projectName
-            [ngClass]="project.isEditable ? 'editable' : 'not-editable'"
+            [ngClass]="
+              project.hasErrors
+                ? 'error-project'
+                : project.isEditable
+                ? 'editable'
+                : 'not-editable'
+            "
             [(ngModel)]="project.name"
-            (blur)="saveProject(project)"
+            (blur)="renameProject(project)"
           />
         </td>
         <td (click)="onClickUsers()" style="cursor: pointer">
@@ -51,7 +63,7 @@
         <td>
           <span
             class="open-link"
-            (click)="openProject(project.id, project.name)"
+            (click)="openProject(project)"
             >Open</span
           >
           |

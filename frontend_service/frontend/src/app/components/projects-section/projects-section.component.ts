@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  Output,
+  ViewChild,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { FileService } from 'src/app/services/file.service';
@@ -8,6 +14,8 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
+import { HttpErrorResponse } from '@angular/common/http';
+import { catchError } from 'rxjs';
 
 @Component({
   selector: 'app-projects-section',
@@ -18,14 +26,14 @@ import { ApiClientService } from 'src/app/services/api-client.service';
 })
 export class ProjectsSectionComponent {
   isEditable: boolean = false;
-  newProjectName: string = '';
   projects: Project[] = [];
   showUserIds: boolean = false;
+  errorMessage: string = '';
 
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
 
-  onCellHover(shouldEdit: boolean, project: any): void {
+  onCellHover(shouldEdit: boolean, project: Project): void {
     this.isEditable = shouldEdit;
     project.isEditable = shouldEdit;
   }
@@ -47,9 +55,14 @@ export class ProjectsSectionComponent {
   private loadProjects() {
     this.apiClientService
       .getData('/project')
+      .pipe(
+        catchError(() => {
+          this.errorMessage = 'Server Error occurred!';
+          return [];
+        })
+      )
       .subscribe((response: Project[]) => {
         this.projects = response;
-        console.log('GET Projects: ', this.projects);
       });
   }
 
@@ -59,8 +72,13 @@ export class ProjectsSectionComponent {
 
     this.apiClientService
       .postData('/project', { name: newProjectName })
+      .pipe(
+        catchError(() => {
+          this.errorMessage = 'Server Error occurred!';
+          return [];
+        })
+      )
       .subscribe((response: Project) => {
-        console.log('POST project: ', response);
         this.projects.push(response);
       });
   }
@@ -75,37 +93,51 @@ export class ProjectsSectionComponent {
     return newProjectId;
   }
 
-  saveProject(project: any): void {
+  renameProject(project: Project): void {
     project.isEditable = false;
     this.isEditable = false;
-    this.fileService.renameFile(
-      { id: project.id.toString(), fileName: project.name, code: '' },
-      project.name
-    );
     this.apiClientService
       .updateData('/project/' + project.id, project)
-      .subscribe((response) => {
-        console.log('UPDATE project:', response);
+      .pipe(
+        catchError((error: HttpErrorResponse) => {
+          if (error.status === 409) {
+            this.errorMessage = 'A project with that name already exists!';
+            project.hasErrors = true;
+          } else {
+            this.errorMessage = 'Server Error occurred!';
+          }
+          return [];
+        })
+      )
+      .subscribe(() => {
+        this.errorMessage = '';
+        project.hasErrors = false;
       });
   }
 
-  openProject(projectId: string, projectName: string): void {
-    const fileToOpen = this.fileService.files.find(
-      (file) => file.id === projectId
-    );
-    if (fileToOpen) {
-      this.fileService.updateCurrentFile(fileToOpen);
+  openProject(project: Project): void {
+    if (!project.hasErrors) {
+      const fileToOpen = this.fileService.files.find(
+        (file) => file.id === project.id
+      );
+      if (fileToOpen) {
+        this.fileService.updateCurrentFile(fileToOpen);
+      }
+      this.fileService.currentProjectName = project.name;
+      this.router.navigate(['/editor/' + project.id]);
     }
-    this.fileService.currentProjectName = projectName;
-    this.router.navigate(['/editor/' + projectId]);
   }
 
   deleteProject(projectId: string): void {
     this.projects = this.projects.filter((project) => project.id !== projectId);
     this.apiClientService
       .deleteData('/project/' + projectId)
-      .subscribe((response) => {
-        console.log('DELETE project:', response);
-      });
+      .pipe(
+        catchError(() => {
+          this.errorMessage = 'Server Error occurred!';
+          return [];
+        })
+      )
+      .subscribe();
   }
 }
