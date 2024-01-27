@@ -18,6 +18,11 @@ import { Router } from '@angular/router';
 export class FileDialogComponent {
   constructor(public dialog: MatDialog, private fileService: FileService) {}
 
+  createFile() {
+    this.fileService.updateSelectedFile(null);
+    this.openDialog('200ms', '200ms');
+  }
+
   openDialog(
     enterAnimationDuration: string,
     exitAnimationDuration: string
