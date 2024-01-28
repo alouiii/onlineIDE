@@ -7,20 +7,27 @@ spring:
         - id: project-service
           uri: lb://project-service
           predicates:
-            - Path=/api/project
-          filters:
-            - StripPrefix=1
+            - Path=/api/**
         - id: compiler-service
           uri: lb://compiler-service
           predicates:
             - Path=/compile
+        - id: dark-mode
+          uri: lb://dark-mode
+          predicates:
+            - Path=/dark-mode/toggle
+        - id: service-registry
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/dashboard
           filters:
-            - StripPrefix=1
+            - SetPath=/
+        - id: service-registry-static
+          uri: http://localhost:8761
+          predicates:
+            - Path=/eureka/**
 eureka:
   client:
     service-url:
         defaultZone: http://localhost:8761/eureka
-
-server:
-    port: 1010
 
