@@ -67,7 +67,7 @@ dark_mode_build:
     - git fetch --prune # Ensure always running the last version 
     - del .git\shallow 2>nul || echo
     - echo "Building the dark-mode"
-    - cd dark-mode\darkmode
+    - cd darkmode
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
@@ -76,14 +76,14 @@ dark_mode_test:
   stage: test
   script:
     - echo "Testing the dark-mode"
-    - cd dark-mode\darkmode
+    - cd darkmode
     #- mvn test ## TODO: add tests if needed
 
 dark_mode_package:
   stage: package
   script:
     - echo "Packaging the dark-mode"
-    - cd dark-mode\darkmode
+    - cd darkmode
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
