@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:4200")
+@CrossOrigin(origins = "http://localhost:8081")
 @RequestMapping("/api")
 public class UserDataController {
 
@@ -21,8 +21,8 @@ public class UserDataController {
     }
 
     @PostMapping("/exchange-code")
-    public ResponseEntity<?> exchangeCodeForToken(@RequestBody String code) {
-        String jwt = oAuthService.exchangeCodeForToken(code);
+    public ResponseEntity<?> exchangeCodeForToken(@RequestBody TokenExchangeRequest request) {
+        String jwt = oAuthService.exchangeCodeForToken(request.getCode(), request.getState());
         return ResponseEntity.ok(jwt);
     }
 }

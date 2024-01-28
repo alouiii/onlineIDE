@@ -28,7 +28,7 @@ public class OAuthService {
         map.put("client_secret", clientSecret);
         map.put("code", code);
         map.put("grant_type", "authorization_code");
-        map.put("redirect_uri", "http://localhost:4200/projects");
+        map.put("redirect_uri", "http://localhost:8081/projects");
 
         return webClient.post()
                 .uri(new URI(tokenUri))
