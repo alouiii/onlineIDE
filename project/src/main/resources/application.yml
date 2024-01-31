@@ -19,7 +19,7 @@ spring:
         registration:
           gitlab:
             provider: gitlab
-            redirectUri: "http://localhost:8081/projects"
+            redirectUri: "http://localhost:4200/projects"
             client-id: 3c320a9378bae7dd876289b05524903b5936ca7b5600d67a9021a409eeda2a36
             client-secret: gloas-186ddd1cb93d0729f6a3e24843675ace5de758541c3bf766f06c4531d62945c6
             scope: read_user,api

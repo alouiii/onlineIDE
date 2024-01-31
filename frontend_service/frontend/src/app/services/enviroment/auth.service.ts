@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   login(): Observable<string> {
-    const loginUrl = `https://gitlab.lrz.de/oauth/authorize?client_id=${authConfig.gitlabClientId}&redirect_uri=${authConfig.gitlabRedirectUri}&response_type=code&scope=read_user&state=${this.state}`;
+    const loginUrl = `https://gitlab.lrz.de/oauth/authorize?client_id=${authConfig.gitlabClientId}&redirect_uri=http://localhost:4200/projects&response_type=code&scope=read_user&state=${this.state}`;
     localStorage.setItem('oauth_state', this.state);
     return new Observable((observer) => {
       observer.next(loginUrl);

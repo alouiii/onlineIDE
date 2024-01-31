@@ -1,3 +1,5 @@
+package com.onlineide.projectservice.dto;
+
 import org.springframework.security.core.GrantedAuthority;
 
 import java.security.Principal;

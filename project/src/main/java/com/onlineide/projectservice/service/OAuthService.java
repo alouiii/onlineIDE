@@ -1,3 +1,5 @@
+package com.onlineide.projectservice.service;
+
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,7 @@ public class OAuthService {
         map.put("client_secret", clientSecret);
         map.put("code", code);
         map.put("grant_type", "authorization_code");
-        map.put("redirect_uri", "http://localhost:8081/projects");
+        map.put("redirect_uri", "http://localhost:4200/projects");
 
         return webClient.post()
                 .uri(new URI(tokenUri))
