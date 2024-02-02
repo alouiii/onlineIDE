@@ -1,4 +1,4 @@
-package com.onlineide.projectservice.config;
+package apigateway;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
