@@ -4,30 +4,30 @@ stages:
   - test 
   - package
 
-# Backend Jobs: Project service
-backend_build:
+# Project Jobs: Project service
+project_build:
   stage: build
   script:
     - git fetch --prune # Ensure always running the last version 
     - del .git\shallow 2>nul || echo
-    - echo "Building the backend Project service"
-    - cd backend\project-service
+    - echo "Building the Project service"
+    - cd project
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
 
-backend_test:
+project_test:
   stage: test
   script:
-    - echo "Testing the backend"
-    - cd backend\project-service
-    #- mvn test  # TODO: setup this again when the project config is fixed
+    - echo "Testing the project-service"
+    - cd project
+    - mvn test
 
-backend_package:
+project_package:
   stage: package
   script:
-    - echo "Packaging the backend"
-    - cd backend\project-service
+    - echo "Packaging the project-service"
+    - cd project
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
