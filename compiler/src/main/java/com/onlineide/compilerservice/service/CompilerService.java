@@ -72,6 +72,21 @@ public class CompilerService {
                 tempFile.delete();
             }
 
+            // Delete the generated .class file after compilation
+            if (fileName.endsWith(".java")) {
+                String classFileName = fileName.substring(0, fileName.lastIndexOf('.')) + ".class";
+                File classFile = new File(classFileName);
+                if (classFile.exists()) {
+                    classFile.delete();
+                }
+            }
+
+            //Delete the output file after compilation
+            File outputFile = new File("output.exe");
+            if (outputFile.exists()) {
+               outputFile.delete();
+            }
+
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
             // Handle exceptions if needed

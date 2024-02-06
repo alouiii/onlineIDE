@@ -1,51 +1,93 @@
+image: maven:latest
+
+variables:
+  MAVEN_OPTS: "-Xmx1024m -DskipTests=true"
+
 # Stages: 
 stages:
   - build
   - test 
   - package
+  - publish
+  - deploy
 
-# Project Jobs: Project service
-project_build:
+frontend_service_build:
   stage: build
+  needs: ["project_build"]
   script:
     - git fetch --prune # Ensure always running the last version 
-    - del .git\shallow 2>nul || echo
-    - echo "Building the Project service"
-    - cd project
+    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - echo "Building the frontend_service"
+    - echo "Current directory... $(Get-Location)"
+    - cd frontend_service/frontend
+    - npm install
+    - $env:NG_CLI_ANALYTICS="off"; ng build
+    - cd ..
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
-
-project_test:
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend_service
+  
+frontend_service_test:
   stage: test
+  needs: ["project_test"]
   script:
-    - echo "Testing the project-service"
-    - cd project
+    - echo "Testing the frontend_service"
+    - cd frontend_service
     - mvn test
 
-project_package:
+frontend_service_package:
   stage: package
+  needs: ["project_package"]
   script:
-    - echo "Packaging the project-service"
-    - cd project
+    - echo "Packaging the frontend_service"
+    - cd frontend_service
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - frontend_service/target/
+
+frontend_service_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the frontend_service"
+    - cd frontend_service
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/frontend_service:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    - docker build --tag $CI_REGISTRY_IMAGE/frontend_service:latest .
+    - docker push $CI_REGISTRY_IMAGE/frontend_service:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend_service
+
 
 # Compiler Jobs
 compiler_build:
   stage: build
+  needs: ["darkmode_build"]
   script:
     - git fetch --prune # Ensure always running the last version 
-    - del .git\shallow 2>nul || echo
+    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
     - echo "Building the compiler"
+    - echo "Current directory... $(Get-Location)"
     - cd compiler
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/compiler
 
 compiler_test:
   stage: test
+  needs: ["dark_mode_test"]
   script:
     - echo "Testing the compiler"
     - cd compiler
@@ -53,87 +95,190 @@ compiler_test:
 
 compiler_package:
   stage: package
+  needs: ["dark_mode_package"]
   script:
     - echo "Packaging the compiler"
     - cd compiler
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - compiler/target/
 
-# Dark-mode Jobs
-dark_mode_build:
+compiler_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the compiler"
+    - cd compiler
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/compiler:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    - docker build --tag $CI_REGISTRY_IMAGE/compiler:latest .
+    - docker push $CI_REGISTRY_IMAGE/compiler:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/compiler
+
+# Project Jobs: Project service
+project_build:
   stage: build
+  needs: ["compiler_build"]
   script:
     - git fetch --prune # Ensure always running the last version 
-    - del .git\shallow 2>nul || echo
-    - echo "Building the dark-mode"
-    - cd dark-mode\darkmode
+    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - echo "Building the Project service"
+    - echo "Current directory... $(Get-Location)"
+    - cd project
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/project
+
+project_test:
+  stage: test
+  needs: ["compiler_test"]
+  script:
+    - echo "Testing the project-service"
+    - cd project
+    - mvn test
+
+project_package:
+  stage: package
+  needs: ["compiler_package"]
+  script:
+    - echo "Packaging the project-service"
+    - cd project
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - project/target/
+
+project_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the project-service"
+    - cd project
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/project:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    - docker build --tag $CI_REGISTRY_IMAGE/project:latest .
+    - docker push $CI_REGISTRY_IMAGE/project:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/project
+
+
+# Dark-mode Jobs
+darkmode_build:
+  stage: build
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git/shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - echo "Building the dark-mode"
+    - echo "Current directory... $(Get-Location)"
+    - cd dark-mode/darkmode
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/dark-mode/darkmode
 
 dark_mode_test:
   stage: test
   script:
     - echo "Testing the dark-mode"
-    - cd dark-mode\darkmode
+    - cd dark-mode/darkmode
     - mvn test
 
 dark_mode_package:
   stage: package
   script:
     - echo "Packaging the dark-mode"
-    - cd dark-mode\darkmode
+    - cd dark-mode/darkmode
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - dark-mode/darkmode/target/
 
-# Frontend Jobs
-# frontend_build:
-#   stage: build
-#   script:
-#     - echo "Building the frontend"
-#     - cd frontend
-#     - mvn clean compile
+dark_mode_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the dark-mode"
+    - cd dark-mode/darkmode
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # pull first for improved caching
+    - docker pull $CI_REGISTRY_IMAGE/dark-mode/darkmode:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    # build and tag new image
+    - docker build --tag $CI_REGISTRY_IMAGE/dark-mode/darkmode:latest .
+    # publish to container registry
+    - docker push $CI_REGISTRY_IMAGE/dark-mode/darkmode:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    # DOCKER_HOST: tcp://docker: 2375
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/dark-mode/darkmode
+  # only:
+  #   changes:
+  #   - dark-mode/darkmode/ ** /*
 
-# frontend_test:
-#   stage: test
-#   script:
-#     - echo "Testing the frontend"
-#     - cd frontend
-#     - mvn test
 
-# frontend_package:
-#   stage: package
-#   script:
-#     - echo "Packaging the frontend"
-#     - cd frontend
-#     - mvn package
-#   variables:
-#     MAVEN_OPTS: "-DskipTests=true"
+deploy_gcp:
+  stage: deploy
+  image: Ubuntu:22.04
+  script:
+    # Create the SSH directory and give it the right permissions
+    - |
+      New-Item -ItemType Directory -Force -Path ~/.ssh
+      $user = whoami
+      icacls ~/.ssh /grant:r "${user}:(OI)(CI)F" /T
+    # Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    - |
+      try {
+        "$env:SSH_PRIVATE_KEY" | Out-File -FilePath ~/.ssh/id_rsa -Encoding ascii
+        $user = whoami
+        icacls ~/.ssh/id_rsa /grant:r "${user}:(OI)(CI)F" /T
+      } catch {
+        Write-Output "Failed to add SSH key"
+        exit 1
+      }
+    # Disable strict host key checking
+    - |
+      "Host *" | Out-File -FilePath ~/.ssh/config -Encoding ascii -Append
+      "StrictHostKeyChecking no" | Out-File -FilePath ~/.ssh/config -Encoding ascii -Append
+      Start-Sleep -Seconds 2
+    # Convert SSH config file to UTF-8 encoding
+    - |
+      $content = Get-Content ~/.ssh/config
+      $content = $content -join "`n"
+      $utf8 = New-Object System.Text.UTF8Encoding $false
+      $sw = New-Object System.IO.StreamWriter ($HOME + "\.ssh\config"), $false, $utf8
+      $sw.WriteLine($content)
+      $sw.Close()
+    - scp -r docker-compose.prod.yml ${SSH_HOST}:~/
+    - ssh ${SSH_HOST} "sudo docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY"
+    - ssh ${SSH_HOST} "sudo docker compose -f docker-compose.prod.yml pull && sudo docker compose -f docker-compose.prod.yml up --force-recreate -d"
+  variables:
+    SSH_HOST: achref.aloui73@34.125.30.158
 
-
-### This is a template for upcoming directories
-## Project Jobs
-# project_build:
-#   stage: build
-#   script:
-#     - echo "Building the project"
-#     - cd project
-#     - mvn clean compile
-
-# project_test:
-#   stage: test
-#   script:
-#     - echo "Testing the project"
-#     - cd project
-#     - mvn test
-
-# project_package:
-#   stage: package
-#   script:
-#     - echo "Packaging the project"
-#     - cd project
-#     - mvn package
-#   variables:
-#     MAVEN_OPTS: "-DskipTests=true"
