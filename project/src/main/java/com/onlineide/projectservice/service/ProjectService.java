@@ -18,10 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -43,11 +40,13 @@ public class ProjectService {
     public ResponseEntity<?> createProject(String name) {
 
         // TODO: Add current user to project
-        /*User currentUser = webClient.get()
-                .uri("http://user-service/api/user/current")
-                .retrieve()
-                .bodyToMono(User.class)
-                .block();*/
+        /*
+         * User currentUser = webClient.get()
+         * .uri("http://user-service/api/user/current")
+         * .retrieve()
+         * .bodyToMono(User.class)
+         * .block();
+         */
 
         // check if user exists in database, if not create a new one
         User currentUser = userRepository.findByUsername("test")
@@ -85,7 +84,12 @@ public class ProjectService {
             log.info("get projects: {}", projects.stream()
                     .map(Project::getName)
                     .collect(Collectors.joining(", ")));
-            return new ResponseEntity<>(ProjectResponse.fromProjects(projects), HttpStatus.OK);
+
+            List<Project> sortedProject = projects.stream()
+                    .sorted(Comparator.comparing(Project::getName, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+
+            return new ResponseEntity<>(ProjectResponse.fromProjects(sortedProject), HttpStatus.OK);
         } catch (Exception e) {
             log.info("error getting projects: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -112,6 +116,10 @@ public class ProjectService {
             log.info("update project name: {}", project.getName());
             projectRepository.save(project);
             return new ResponseEntity<>(ProjectResponse.fromProject(project), HttpStatus.OK);
+        } catch (DataIntegrityViolationException e) {
+            log.info("project with name: {} already exists", projectRequest.getName());
+            return ResponseEntity.status(HttpStatus.CONFLICT)
+                    .body(new ErrorResponse("project with name: " + projectRequest.getName() + " already exists!"));
         } catch (Exception e) {
             log.info("error updating project: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -141,7 +149,7 @@ public class ProjectService {
 
     public ResponseEntity<?> addUserToProject(String id, String username) {
         try {
-            //TODO: Check if username exists in user-service
+            // TODO: Check if username exists in user-service
             Project project = projectRepository.findById(id).orElseThrow();
             project.getUsers().add(User.builder().username(username).build());
             log.info("add user: {} to project: {}", username, project.getName());
@@ -186,7 +194,13 @@ public class ProjectService {
         try {
             Project project = projectRepository.findById(id).orElseThrow();
             log.info("get files from project: {}", project.getName());
-            return new ResponseEntity<>(FileResponse.fromFiles(project.getFiles()), HttpStatus.OK);
+
+            // Sort files by name in alphabetical order
+            List<File> sortedFiles = project.getFiles().stream()
+                    .sorted(Comparator.comparing(File::getName, String.CASE_INSENSITIVE_ORDER))
+                    .toList();
+
+            return new ResponseEntity<>(FileResponse.fromFiles(sortedFiles), HttpStatus.OK);
         } catch (NoSuchElementException e) {
             log.info("project with id: {} not found", id);
             return ResponseEntity.status(HttpStatus.NOT_FOUND)

@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+  darkmode-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/dark-mode/darkmode
+    restart: on-failure
+    ports: 
+      - 8083:8083
+  compiler-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/compiler
+    restart: on-failure
+    ports:
+      - 8082:8082  
+  project-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/project
+    restart: on-failure
+    ports:
+      - 8081:8081
+  frontend-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/frontend_service
+    restart: on-failure
+    ports:
+      - 8080:8080
