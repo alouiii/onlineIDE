@@ -1,4 +1,6 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/auth.service';
@@ -8,32 +10,18 @@ import { AuthService } from 'src/app/auth.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
   standalone: true,
-  imports: [MatButtonModule],
+  imports: [FormsModule, CommonModule, MatButtonModule],
+
 })
 export class HomeComponent {
   constructor(private router: Router, public authService : AuthService) {}
 
-
-
+  authenticatedNow: boolean = true;
   ngOnInit(): void {
-    this.authService.authenticated.subscribe((authenticated) => {
+    
+    this.authService.authenticated.subscribe(authenticated => {
       console.log('Authentication status changed:', authenticated);
+      this.authenticatedNow = authenticated;
     });
-    
   }
-
-  // login() {
-  //   console.log('login');
-    
-  //   this.router.navigate(['/projects']);
-  // }
-  // login() {
-  //   console.log('Initiating OAuth 2.0 login flow');
-
-  //   // Construct the OAuth authorization URL
-  //   const authorizationUrl = 'http://localhost:8080/oauth2/authorization/gitlab';
-
-  //   // Redirect the user to the OAuth authorization URL
-  //   window.location.href = authorizationUrl;
-  // }
 }
