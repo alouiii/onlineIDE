@@ -38,16 +38,30 @@ export class AuthService {
   // }
 
   
-  public logout(): void { 
+  public logout(): void {
+    const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
     
-    this.httpClient.post("http://localhost:8080/logout", {}, { withCredentials: true })
-    .subscribe(() => { 
-      this.router.navigateByUrl('/');
+    this.httpClient.post('http://localhost:8080/logout', {}, { withCredentials: true, headers: new HttpHeaders({'X-CSRF-TOKEN': csrfToken}), responseType: 'text'})
+    .subscribe(() => {
+      console.log("logged out successfully");
+      // Handle successful logout (if needed)
+      this.router.navigate(['/']); // Navigate to home page after logout
       this.checkAuthentication();
     },
-    error => { 
-      console.error('Logout failed:', error);
-    }); 
+    (err) => {
+      console.log("error during logout", err);
+      // Handle error during logout
+    });
+  }
+
+
+  private getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
   }
 
   public login(): void {
