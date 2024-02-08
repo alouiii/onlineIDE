@@ -37,15 +37,13 @@ public class ProjectService {
     @Autowired
     private WebClient webClient;
 
-    public ResponseEntity<?> createProject(String name) {
-
-        // TODO:
+    public ResponseEntity<?> createProject(String name, String userId) {
 
         // check if user exists in database, if not create a new one
-        User currentUser = userRepository.findByUsername("test")
+        User currentUser = userRepository.findByUsername(userId)
                 .orElseGet(() -> {
                     User newUser = User.builder()
-                            .username("test")
+                            .username(userId)
                             .build();
                     userRepository.save(newUser);
                     return newUser;
@@ -71,18 +69,20 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> getAllProjects() {
+    public ResponseEntity<?> getAllProjects(String userName) {
         try {
             List<Project> projects = projectRepository.findAll();
-            log.info("get projects: {}", projects.stream()
+            log.info("user: {} get projects: {}", userName,projects.stream()
                     .map(Project::getName)
                     .collect(Collectors.joining(", ")));
 
-            List<Project> sortedProject = projects.stream()
+            List<Project> userProjects = projects.stream()
+                    .filter(project -> project.getUsers().stream()
+                            .anyMatch(user -> user.getUsername().equals(userName)))
                     .sorted(Comparator.comparing(Project::getName, String.CASE_INSENSITIVE_ORDER))
                     .toList();
 
-            return new ResponseEntity<>(ProjectResponse.fromProjects(sortedProject), HttpStatus.OK);
+            return new ResponseEntity<>(ProjectResponse.fromProjects(userProjects), HttpStatus.OK);
         } catch (Exception e) {
             log.info("error getting projects: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
