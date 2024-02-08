@@ -44,11 +44,6 @@ public class ApiGatewayApplication {
         }
         return false;
     }
-
-    @GetMapping("/api/test") 
-    public String isauthenticated() {
-        return "ahla test";
-    }
     
     // see https://stackoverflow.com/a/74813159
     @GetMapping("/csrf")
