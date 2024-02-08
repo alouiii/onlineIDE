@@ -5,6 +5,7 @@ import java.security.Principal;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +18,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 @RestController
+@CrossOrigin(origins = "http://localhost:8010", maxAge = 3600)
 public class ApiGatewayApplication {
 
     public static void main(String[] args) {
@@ -32,7 +34,7 @@ public class ApiGatewayApplication {
 		return SecurityContextHolder.getContext().getAuthentication();
 	}
 
-    @GetMapping("/api/authenticated") 
+    @GetMapping("/authenticated") 
     public boolean authenticated() {
         SecurityContext securityContext = SecurityContextHolder.getContext(); 
         Authentication authentication = securityContext.getAuthentication(); 
