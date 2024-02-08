@@ -9,6 +9,7 @@ export const routes: Route[] = [
   { path: '', component: HomeComponent },
   { path: 'projects', component: ProjectsSectionComponent, canActivate: [AuthGuard] },
   { path: 'editor/:projectId', component: SidenavComponent, canActivate: [AuthGuard] },
+  { path: '**', redirectTo: '' } // Redirect any unknown route to the home page
 ];
 
 @NgModule({
