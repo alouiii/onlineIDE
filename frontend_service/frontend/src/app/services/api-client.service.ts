@@ -6,16 +6,35 @@ import { Observable } from 'rxjs';
   providedIn: 'root',
 })
 export class ApiClientService {
-  private baseURL = 'http://localhost:8081/api';
+  private baseURL = 'http://localhost:8080/api';
 
   constructor(private http: HttpClient) {}
 
+  private getCookie(name: string): string | null {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+      return parts.pop()?.split(';').shift() || null;
+    }
+    return null;
+  }
+
   getData(url: string, options?: any): Observable<any> {
+    if (!options) {
+      options = {}
+    }
+    options['withCredentials'] = true ;
     return this.http.get(`${this.baseURL}${url}`, options);
   }
 
   postData(url: string, data: any, options?: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    if (!options) {
+      options = {}
+    }
+    options['withCredentials'] = true ;
+    const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
+
+    const headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
     return this.http.post(
       `${this.baseURL}${url}`,
       data,
