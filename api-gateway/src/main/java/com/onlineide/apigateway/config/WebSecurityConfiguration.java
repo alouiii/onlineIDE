@@ -24,18 +24,22 @@ public class WebSecurityConfiguration {
 
                     auth.anyRequest().permitAll();
                 })
-                .oauth2Login(Customizer.withDefaults())
+                .oauth2Login(oauth2Login ->
+                        oauth2Login
+                                .defaultSuccessUrl("http://localhost:8010/")
+                                .permitAll()
+                )
                 .formLogin(Customizer.withDefaults())
-                .csrf(csrf -> {
-                    csrf.csrfTokenRepository(csrfTokenRepository());
-                    csrf.csrfTokenRequestHandler(requestHandler);
-                })
                 .logout((logout) ->
                     logout.deleteCookies("JSESSIONID")
                     .invalidateHttpSession(true)
                     .logoutUrl("/logout")
-                    .logoutSuccessUrl("/")
+                    .logoutSuccessUrl("http://localhost:8010/")
                 )
+                .csrf(csrf -> {
+                    csrf.csrfTokenRepository(csrfTokenRepository());
+                    csrf.csrfTokenRequestHandler(requestHandler);
+                })
                 .build();
     }
 
