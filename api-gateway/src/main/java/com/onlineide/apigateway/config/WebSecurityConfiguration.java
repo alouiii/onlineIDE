@@ -26,10 +26,10 @@ public class WebSecurityConfiguration {
                 })
                 .oauth2Login(oauth2Login ->
                         oauth2Login
+                                .loginPage("http://localhost:8010/")
                                 .defaultSuccessUrl("http://localhost:8010/projects")
                                 .permitAll()
                 )
-                .formLogin(Customizer.withDefaults())
                 .logout((logout) ->
                     logout.deleteCookies("JSESSIONID")
                     .invalidateHttpSession(true)

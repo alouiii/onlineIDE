@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, CanActivate, CanActivateFn, Router, RouterStateSnapshot } from '@angular/router';
 import { AuthService } from './auth.service';
 import { Observable, tap } from 'rxjs';
 
@@ -7,7 +7,7 @@ import { Observable, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class AuthGuard implements CanActivate {
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private router: Router) {
   }
 
   /**
@@ -23,8 +23,7 @@ export class AuthGuard implements CanActivate {
       // tap will intercept each emission of a value and perform some action tap(authenticated => {
       tap(authenticated => {  
         if (!authenticated) {
-          // if user is not authenticated, try login via `AuthService` this.authService.login();
-          this.authService.login();
+          this.router.navigate(['/']); // Navigate to home page after logout
         }
       }));
     }
