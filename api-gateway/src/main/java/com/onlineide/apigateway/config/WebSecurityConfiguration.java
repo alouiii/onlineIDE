@@ -7,6 +7,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.csrf.*;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
@@ -21,7 +22,6 @@ public class WebSecurityConfiguration {
                 authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/**").authenticated();
                     auth.requestMatchers("/user").authenticated();
-
                     auth.anyRequest().permitAll();
                 })
                 .oauth2Login(oauth2Login ->
@@ -33,10 +33,11 @@ public class WebSecurityConfiguration {
                 .logout((logout) ->
                     logout.deleteCookies("JSESSIONID")
                     .invalidateHttpSession(true)
-                    .logoutUrl("/logout")
-                    .logoutSuccessUrl("http://localhost:8010/")
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
+                    .permitAll()
                 )
                 .csrf(csrf -> {
+                    csrf.ignoringRequestMatchers("/login", "/logout");
                     csrf.csrfTokenRepository(csrfTokenRepository());
                     csrf.csrfTokenRequestHandler(requestHandler);
                 })
