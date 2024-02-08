@@ -13,11 +13,6 @@ import { AuthService } from 'src/app/services/enviroment/auth.service';
 export class HomeComponent {
   constructor(private authService: AuthService, private router: Router) {}
 
-  // login() {
-  //   console.log('login');
-  //   this.router.navigate(['/projects']);
-  // }
-
   login(): void {
     this.authService.login().subscribe({
       next: (url: string) => {
