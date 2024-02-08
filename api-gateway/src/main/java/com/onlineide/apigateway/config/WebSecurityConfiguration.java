@@ -2,10 +2,12 @@ package com.onlineide.apigateway.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
 import org.springframework.security.web.csrf.*;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -26,7 +28,7 @@ public class WebSecurityConfiguration {
                 })
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .loginPage("http://localhost:8010/")
+                                .loginPage("http://localhost:8010")
                                 .defaultSuccessUrl("http://localhost:8010/projects")
                                 .permitAll()
                 )
@@ -35,6 +37,7 @@ public class WebSecurityConfiguration {
                     .invalidateHttpSession(true)
                     .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "POST"))
                     .permitAll()
+                    .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler (HttpStatus.OK)))
                 )
                 .csrf(csrf -> {
                     csrf.ignoringRequestMatchers("/login", "/logout");
