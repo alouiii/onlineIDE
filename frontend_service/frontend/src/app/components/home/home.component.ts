@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { Router } from '@angular/router';
+import { AuthService } from 'src/app/services/enviroment/auth.service';
 
 @Component({
   selector: 'app-home',
@@ -10,10 +11,16 @@ import { Router } from '@angular/router';
   imports: [MatButtonModule],
 })
 export class HomeComponent {
-  constructor(private router: Router) {}
+  constructor(private authService: AuthService, private router: Router) {}
 
-  login() {
-    console.log('login');
-    this.router.navigate(['/projects']);
+  login(): void {
+    this.authService.login().subscribe({
+      next: (url: string) => {
+        window.location.href = url;
+      },
+      error: (err) => {
+        console.error('Login failed', err);
+      },
+    });
   }
 }
