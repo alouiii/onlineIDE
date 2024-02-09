@@ -19,7 +19,7 @@ public class DarkmodeApplication {
 		SpringApplication.run(DarkmodeApplication.class, args);
 	}
 
-	@RequestMapping(path = "/dark-mode/toggle", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/dark-mode/toggle", method = RequestMethod.GET)
 	public void toggleDarkMode() {
 		long currentTime = System.currentTimeMillis();
 

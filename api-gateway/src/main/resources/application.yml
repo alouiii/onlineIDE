@@ -1,4 +1,30 @@
 spring:
+  cloud:
+    gateway:
+      mvc:
+        routes:
+          - id: project-service
+            uri: lb://project-service
+            predicates:
+              - Path=/api/project/**
+          - id: compiler-service
+            uri: lb://compiler-service
+            predicates:
+              - Path=/api/compile
+          - id: dark-mode
+            uri: lb://dark-mode
+            predicates:
+              - Path=/api/dark-mode/toggle
+          - id: service-registry
+            uri: http://localhost:8761
+            predicates:
+              - Path=/eureka/dashboard
+            filters:
+              - SetPath=/
+          - id: service-registry-static
+            uri: http://localhost:8761
+            predicates:
+              - Path=/eureka/**
   security:
     oauth2:
       client:
@@ -17,31 +43,7 @@ spring:
             client-secret: gloas-ba57805815c00aef91e93a8750f40e23d3f645b3591bcc34584f7201d5f6f67a
   application:
     name: api-gateway
-  cloud:
-    gateway:
-      routes:
-        - id: project-service
-          uri: lb://project-service
-          predicates:
-            - Path=/api/**
-        - id: compiler-service
-          uri: lb://compiler-service
-          predicates:
-            - Path=/compilecd
-        - id: dark-mode
-          uri: lb://dark-mode
-          predicates:
-            - Path=/dark-mode/toggle
-        - id: service-registry
-          uri: http://localhost:8761
-          predicates:
-            - Path=/eureka/dashboard
-          filters:
-            - SetPath=/
-        - id: service-registry-static
-          uri: http://localhost:8761
-          predicates:
-            - Path=/eureka/**
+
 eureka:
   client:
     service-url:
