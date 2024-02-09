@@ -16,17 +16,17 @@ frontend_service_build:
   needs: ["project_build"]
   script:
     - git fetch --prune # Ensure always running the last version 
-    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - del /Q .git\shallow; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
     - echo "Building the frontend_service"
     - echo "Current directory... $(Get-Location)"
-    - cd frontend_service/frontend
-    - npm install
-    - $env:NG_CLI_ANALYTICS="off"; ng build
-    - cd ..
+    - cd frontend_service
     - mvn clean compile
   variables:
     GIT_DEPTH: 0
     IMAGE_NAME: $CI_REGISTRY_IMAGE/frontend_service
+  artifacts:
+    paths:
+      - frontend_service/target/
   
 frontend_service_test:
   stage: test
@@ -42,6 +42,11 @@ frontend_service_package:
   script:
     - echo "Packaging the frontend_service"
     - cd frontend_service
+    - mvn clean compile
+    - cd frontend
+    - npm install
+    - $env:NG_CLI_ANALYTICS="off"; ng build --output-path=../src/main/resources/static
+    - cd ..
     - mvn package
   variables:
     MAVEN_OPTS: "-DskipTests=true"
@@ -243,6 +248,118 @@ dark_mode_publish:
   #   changes:
   #   - dark-mode/darkmode/ ** /*
 
+# API Gateway Jobs
+api_gateway_build:
+  stage: build
+  needs: ["service_registry_build"]
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - echo "Building the api-gateway"
+    - echo "Current directory... $(Get-Location)"
+    - cd api-gateway
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/api-gateway
+
+api_gateway_test:
+  stage: test
+  needs: ["service_registry_test"]
+  script:
+    - echo "Testing the api-gateway"
+    - cd api-gateway
+    - mvn test
+
+api_gateway_package:
+  stage: package
+  needs: ["service_registry_package"]
+  script:
+    - echo "Packaging the api-gateway"
+    - cd api-gateway
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - api-gateway/target/
+
+api_gateway_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the api-gateway"
+    - cd api-gateway
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/api-gateway:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    - docker build --tag $CI_REGISTRY_IMAGE/api-gateway:latest .
+    - docker push $CI_REGISTRY_IMAGE/api-gateway:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/api-gateway
+
+
+# Service Registry Jobs
+service_registry_build:
+  stage: build
+  needs: ["frontend_service_build"]
+  script:
+    - git fetch --prune # Ensure always running the last version 
+    - del .git\shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
+    - echo "Building the service-registry"
+    - echo "Current directory... $(Get-Location)"
+    - cd service-registry
+    - mvn clean compile
+  variables:
+    GIT_DEPTH: 0
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/service-registry
+
+service_registry_test:
+  stage: test
+  needs: ["frontend_service_test"]
+  script:
+    - echo "Testing the service-registry"
+    - cd service-registry
+    - mvn test
+
+service_registry_package:
+  stage: package
+  needs: ["frontend_service_package"]
+  script:
+    - echo "Packaging the service-registry"
+    - cd service-registry
+    - mvn package
+  variables:
+    MAVEN_OPTS: "-DskipTests=true"
+  artifacts:
+    paths:
+      - service-registry/target/
+
+service_registry_publish:
+  stage: publish
+  image: docker:stable
+  services:
+    - docker:25.0.2-dind
+  script:
+    - echo "Publishing the service-registry"
+    - cd service-registry
+    - echo "CI registry details:"
+    - echo $CI_REGISTRY_USER
+    - echo $CI_REGISTRY_PASSWORD
+    - echo $CI_REGISTRY
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker pull $CI_REGISTRY_IMAGE/service-registry:latest; if ($?) { echo "Image pulled successfully" } else { echo "Image pull failed or image does not exist" }
+    - docker build --tag $CI_REGISTRY_IMAGE/service-registry:latest .
+    - docker push $CI_REGISTRY_IMAGE/service-registry:latest
+  variables:
+    DOCKER_DRIVER: overlay2
+    IMAGE_NAME: $CI_REGISTRY_IMAGE/service-registry
 
 deploy_gcp:
   stage: deploy
