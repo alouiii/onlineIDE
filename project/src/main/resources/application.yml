@@ -1,6 +1,6 @@
 spring:
   application:
-    name: backend-service
+    name: project-service
   datasource:
     url: ${JDBC_URL:jdbc:postgresql://postgresdb:5432/project-db?user=admin&password=test}
     username: ${POSTGRES_USER:admin}
