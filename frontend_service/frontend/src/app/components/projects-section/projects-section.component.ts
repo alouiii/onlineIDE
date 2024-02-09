@@ -14,7 +14,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError } from 'rxjs';
 
 @Component({
@@ -42,19 +42,38 @@ export class ProjectsSectionComponent {
     this.showUserIds = !this.showUserIds;
   }
 
+  private userId : any = ""
+
   constructor(
     private fileService: FileService,
     private router: Router,
-    private apiClientService: ApiClientService
+    private apiClientService: ApiClientService,
   ) {}
 
   ngOnInit(): void {
+    let options = {};
+    this.apiClientService.getData('/user').pipe(
+      catchError(() => {
+        this.errorMessage = 'Server Error occurred!';
+        return "";
+      })
+    ).subscribe((response: any) => {
+      console.log("response", response);
+      this.userId = response;
+      console.log("userId" , this.userId);
+      options = {
+        headers: new HttpHeaders({
+          'userId': this.userId
+        })
+      };
+    });
     this.loadProjects();
   }
 
   private loadProjects() {
+    let options = { headers: new HttpHeaders({'userId': this.userId}) };
     this.apiClientService
-      .getData('/project')
+      .getData('/project', options)
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
