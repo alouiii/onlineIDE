@@ -3,6 +3,7 @@ package com.onlineide.projectservice;
 import com.onlineide.projectservice.dto.ErrorResponse;
 import com.onlineide.projectservice.dto.ProjectResponse;
 import com.onlineide.projectservice.model.Project;
+import com.onlineide.projectservice.model.User;
 import com.onlineide.projectservice.repository.ProjectRepository;
 import com.onlineide.projectservice.service.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
@@ -43,15 +44,23 @@ class ProjectServiceApplicationTests {
 	@DisplayName("getAllProjects returns list of projects when projects exist")
 	void getAllProjectsReturnsListOfProjectsWhenProjectsExist() {
 		// Given
+		String userName = "testUser";
+		User user = new User();
+		user.setUsername(userName);
+
 		Project project1 = new Project();
 		project1.setName("Project 1");
+		project1.getUsers().add(user);
+
 		Project project2 = new Project();
 		project2.setName("Project 2");
+		project2.getUsers().add(user);
+
 		List<Project> projects = Arrays.asList(project1, project2);
 		when(projectRepository.findAll()).thenReturn(projects);
 
 		// When
-		ResponseEntity<?> response = projectService.getAllProjects();
+		ResponseEntity<?> response = projectService.getAllProjects(userName);
 
 		// Then
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -62,10 +71,11 @@ class ProjectServiceApplicationTests {
 	@DisplayName("getAllProjects returns error response when exception is thrown")
 	void getAllProjectsReturnsErrorResponseWhenExceptionIsThrown() {
 		// Given
+		String userName = "testUser";
 		when(projectRepository.findAll()).thenThrow(new RuntimeException("Unexpected error"));
 
 		// When
-		ResponseEntity<?> response = projectService.getAllProjects();
+		ResponseEntity<?> response = projectService.getAllProjects(userName);
 
 		// Then
 		assertEquals(HttpStatus.INTERNAL_SERVER_ERROR, response.getStatusCode());
