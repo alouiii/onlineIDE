@@ -13,8 +13,8 @@ spring:
             provider: gitlab
             redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
             authorization-grant-type: authorization_code
-            client-id: 8910d32ed7ac4b90e31fb6285b6da16daf77a6e8841fe1a62ffff46d121617aa
-            client-secret: gloas-cb0e46bc2cd592844b616ba1e5cafaf1eac1eedc553203ea0d19b7426a2b5462
+            client-id: 3c320a9378bae7dd876289b05524903b5936ca7b5600d67a9021a409eeda2a36
+            client-secret: gloas-ba57805815c00aef91e93a8750f40e23d3f645b3591bcc34584f7201d5f6f67a
   application:
     name: api-gateway
   cloud:
@@ -27,7 +27,7 @@ spring:
         - id: compiler-service
           uri: lb://compiler-service
           predicates:
-            - Path=/compile
+            - Path=/compilecd
         - id: dark-mode
           uri: lb://dark-mode
           predicates:
@@ -45,5 +45,4 @@ spring:
 eureka:
   client:
     service-url:
-        defaultZone: http://localhost:8761/eureka
-
+      defaultZone: http://localhost:8761/eureka

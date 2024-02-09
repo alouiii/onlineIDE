@@ -1,22 +1,23 @@
 package com.onlineide.apigateway;
 
-import java.security.Principal;
-
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
-import org.springframework.security.web.csrf.CsrfToken;
 
-import jakarta.servlet.http.HttpServletRequest;
+import java.security.Principal;
 
 
 @SpringBootApplication
+@EnableEurekaClient
 @RestController
 @CrossOrigin(origins = "http://localhost:8010", maxAge = 3600)
 public class ApiGatewayApplication {
