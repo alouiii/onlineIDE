@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-projects-section',
@@ -42,57 +42,65 @@ export class ProjectsSectionComponent {
     this.showUserIds = !this.showUserIds;
   }
 
-  private userId : any = ""
+  private userId: any = '';
 
   constructor(
     private fileService: FileService,
     private router: Router,
-    private apiClientService: ApiClientService,
+    private apiClientService: ApiClientService
   ) {}
 
   ngOnInit(): void {
-    let options = {};
-    this.apiClientService.getData('/user').pipe(
-      catchError(() => {
-        this.errorMessage = 'Server Error occurred!';
-        return "";
-      })
-    ).subscribe((response: any) => {
-      console.log("response", response);
-      this.userId = response;
-      console.log("userId" , this.userId);
-      options = {
-        headers: new HttpHeaders({
-          'userId': this.userId
-        })
-      };
-    });
-    this.loadProjects();
+    this.fetchUserId();
   }
 
-  private loadProjects() {
-    let options = { headers: new HttpHeaders({'userId': this.userId}) };
+  private fetchUserId(): void {
+    this.apiClientService
+      .getData('/api/user')
+      .pipe(
+        catchError((error) => {
+          this.errorMessage = 'Server Error occurred!';
+          return of('');
+        })
+      )
+      .subscribe((userId: string) => {
+        if (userId) {
+          this.userId = userId;
+          this.loadProjects();
+        }
+      });
+  }
+  private loadProjects(): void {
+    const options = { headers: new HttpHeaders({ userId: this.userId }) };
     this.apiClientService
       .getData('/project', options)
       .pipe(
-        catchError(() => {
+        catchError((error) => {
           this.errorMessage = 'Server Error occurred!';
-          return [];
+          return of([]);
         })
       )
-      .subscribe((response: Project[]) => {
-        this.projects = response;
+      .subscribe((projects: Project[]) => {
+        this.projects = projects;
       });
   }
-
   addProject(): void {
     const newProjectId = this.generateUniqueProjectId();
     const newProjectName = `Project_${newProjectId}`;
 
+    if (!this.userId) {
+      this.errorMessage = 'User ID is not set!';
+      return;
+    }
+    const options = {
+      headers: new HttpHeaders({
+        userId: this.userId,
+      }),
+    };
     this.apiClientService
-      .postData('/project', { name: newProjectName })
+      .postData('/project', { name: newProjectName }, options)
       .pipe(
-        catchError(() => {
+        catchError((error: HttpErrorResponse) => {
           this.errorMessage = 'Server Error occurred!';
           return [];
         })
