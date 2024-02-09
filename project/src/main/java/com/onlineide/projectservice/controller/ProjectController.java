@@ -29,8 +29,8 @@ public class ProjectController {
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> getAllProjects() {
-
+    public ResponseEntity<?> getAllProjects(@RequestHeader("userId") String userId) {
+        System.out.println("userId" + userId);
         return projectService.getAllProjects();
     }
 

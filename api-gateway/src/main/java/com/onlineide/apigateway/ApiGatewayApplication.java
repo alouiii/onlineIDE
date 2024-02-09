@@ -32,8 +32,9 @@ public class ApiGatewayApplication {
         return "Hello, this is the home page!";
     }
 
-    @RequestMapping("/user") public Principal user() {
-		return SecurityContextHolder.getContext().getAuthentication();
+    @GetMapping("/api/user") 
+    public String user() {
+		return SecurityContextHolder.getContext().getAuthentication().getName();
 	}
 
     @GetMapping("/authenticated") 
