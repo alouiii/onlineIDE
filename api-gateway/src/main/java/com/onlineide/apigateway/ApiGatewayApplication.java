@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
-
 @SpringBootApplication
 @EnableEurekaClient
 @RestController
@@ -30,21 +29,22 @@ public class ApiGatewayApplication {
         return "Hello, this is the home page!";
     }
 
-    @RequestMapping("/user") public Principal user() {
-		return SecurityContextHolder.getContext().getAuthentication();
-	}
+    @RequestMapping("/user")
+    public Principal user() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
 
-    @GetMapping("/authenticated") 
+    @GetMapping("/authenticated")
     public boolean authenticated() {
-        SecurityContext securityContext = SecurityContextHolder.getContext(); 
-        Authentication authentication = securityContext.getAuthentication(); 
+        SecurityContext securityContext = SecurityContextHolder.getContext();
+        Authentication authentication = securityContext.getAuthentication();
         if (authentication != null) {
             return authentication.getAuthorities().stream()
-                .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ANONYMOUS")); 
+                    .noneMatch(grantedAuthority -> grantedAuthority.getAuthority().equals("ROLE_ANONYMOUS"));
         }
         return false;
     }
-    
+
     // see https://stackoverflow.com/a/74813159
     @GetMapping("/csrf")
     public void getCsrfToken(HttpServletRequest request) {
