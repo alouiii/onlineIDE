@@ -399,4 +399,4 @@ deploy_gcp:
   variables:
     SSH_HOST: achref.aloui73@34.125.30.158
   # only:
-  #   - main
+  #   - main # Only run on the main branch
