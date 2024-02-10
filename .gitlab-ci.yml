@@ -398,4 +398,5 @@ deploy_gcp:
     - ssh ${SSH_HOST} "sudo docker compose -f docker-compose.prod.yml pull && sudo docker compose -f docker-compose.prod.yml up --force-recreate -d"
   variables:
     SSH_HOST: achref.aloui73@34.125.30.158
-
+  only:
+    - main
