@@ -14,7 +14,7 @@ spring:
             redirect-uri: http://localhost:8080/login/oauth2/code/gitlab
             authorization-grant-type: authorization_code
             client-id: 3c320a9378bae7dd876289b05524903b5936ca7b5600d67a9021a409eeda2a36
-            client-secret: gloas-ba57805815c00aef91e93a8750f40e23d3f645b3591bcc34584f7201d5f6f67a
+            client-secret: gloas-1779d19f5ac27ece72c7a4af01deb193e1108f71fa04ad20abc078d3fae77ce4
   application:
     name: api-gateway
   cloud:
