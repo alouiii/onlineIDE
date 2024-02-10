@@ -22,7 +22,7 @@ export class CompileService {
   compileCode(code: string): Observable<any> {
     if (this.isMock) {
       // Mock response
-      const mockOutput = `Mocked output for code: ${code}`;
+      const mockOutput = `${code}`;
       this.compileOutputSource.next(mockOutput);
       return of({ output: mockOutput });
     } else {
