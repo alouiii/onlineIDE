@@ -49,4 +49,4 @@ eureka:
     service-url:
         defaultZone: http://service-registry-service:8761/eureka
 cors:
-  origins: http://frontend_service:8084
+  origins: http://34.125.30.158:8084
