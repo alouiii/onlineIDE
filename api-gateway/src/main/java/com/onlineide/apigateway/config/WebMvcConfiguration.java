@@ -10,6 +10,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 public class WebMvcConfiguration implements WebMvcConfigurer {
     private final CustomInterceptor customInterceptor;
 
+    @Value("${cors.origins}")
+    private String corsOrigins;
+
     public WebMvcConfiguration(CustomInterceptor customInterceptor) {
         this.customInterceptor = customInterceptor;
     }
@@ -22,8 +25,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
                 .allowedHeaders("*")
-                // replace this http://localhost:8010 with frontend service
-                .allowedOrigins("http://localhost:8010")
+                .allowedOrigins(corsOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }

@@ -14,6 +14,9 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfiguration {
 
+    @Value("${cors.origins}")
+    private String corsOrigins;
+
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
@@ -27,8 +30,8 @@ public class WebSecurityConfiguration {
                 })
                 .oauth2Login(oauth2Login ->
                         oauth2Login
-                                .loginPage("http://localhost:8010")
-                                .defaultSuccessUrl("http://localhost:8010/projects")
+                                .loginPage(loginPage)
+                                .defaultSuccessUrl(loginPage + "/projects")
                                 .permitAll()
                 )
                 .logout((logout) ->
