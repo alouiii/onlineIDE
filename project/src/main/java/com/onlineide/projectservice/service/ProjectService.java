@@ -37,22 +37,13 @@ public class ProjectService {
     @Autowired
     private WebClient webClient;
 
-    public ResponseEntity<?> createProject(String name) {
-
-        // TODO: Add current user to project
-        /*
-         * User currentUser = webClient.get()
-         * .uri("http://user-service/api/user/current")
-         * .retrieve()
-         * .bodyToMono(User.class)
-         * .block();
-         */
+    public ResponseEntity<?> createProject(String name, String userId) {
 
         // check if user exists in database, if not create a new one
-        User currentUser = userRepository.findByUsername("test")
+        User currentUser = userRepository.findByUsername(userId)
                 .orElseGet(() -> {
                     User newUser = User.builder()
-                            .username("test")
+                            .username(userId)
                             .build();
                     userRepository.save(newUser);
                     return newUser;
@@ -78,18 +69,20 @@ public class ProjectService {
         }
     }
 
-    public ResponseEntity<?> getAllProjects() {
+    public ResponseEntity<?> getAllProjects(String userName) {
         try {
             List<Project> projects = projectRepository.findAll();
-            log.info("get projects: {}", projects.stream()
+            log.info("user: {} get projects: {}", userName,projects.stream()
                     .map(Project::getName)
                     .collect(Collectors.joining(", ")));
 
-            List<Project> sortedProject = projects.stream()
+            List<Project> userProjects = projects.stream()
+                    .filter(project -> project.getUsers().stream()
+                            .anyMatch(user -> user.getUsername().equals(userName)))
                     .sorted(Comparator.comparing(Project::getName, String.CASE_INSENSITIVE_ORDER))
                     .toList();
 
-            return new ResponseEntity<>(ProjectResponse.fromProjects(sortedProject), HttpStatus.OK);
+            return new ResponseEntity<>(ProjectResponse.fromProjects(userProjects), HttpStatus.OK);
         } catch (Exception e) {
             log.info("error getting projects: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
@@ -149,7 +142,21 @@ public class ProjectService {
 
     public ResponseEntity<?> addUserToProject(String id, String username) {
         try {
-            // TODO: Check if username exists in user-service
+            // Check if username exists in gitlab
+            String gitlabUrl = "https://gitlab.lrz.de/api/v4/users?username=" + username;
+            List<Object> gitlabUser = webClient.get()
+                    .uri(gitlabUrl)
+                    .header("PRIVATE-TOKEN", "glpat-pDyHHTn6YoMZKNVftxxs")
+                    .retrieve()
+                    .bodyToMono(List.class)
+                    .block();
+
+            if (gitlabUser.isEmpty()) {
+                log.info("username: {} does not exist in gitlab", username);
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(new ErrorResponse("username: " + username + " does not exist in gitlab!"));
+            }
+
             Project project = projectRepository.findById(id).orElseThrow();
             project.getUsers().add(User.builder().username(username).build());
             log.info("add user: {} to project: {}", username, project.getName());

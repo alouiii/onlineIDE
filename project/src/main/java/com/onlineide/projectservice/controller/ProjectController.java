@@ -22,16 +22,18 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> createProject(@RequestBody Map<String, String> projectRequest) {
+    public ResponseEntity<?> createProject(
+            @RequestBody Map<String, String> projectRequest,
+            @RequestHeader("userId") String userId) {
 
-        return projectService.createProject(projectRequest.get("name"));
+        return projectService.createProject(projectRequest.get("name"), userId);
     }
 
     @GetMapping
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<?> getAllProjects(@RequestHeader("userId") String userId) {
-        System.out.println("userId" + userId);
-        return projectService.getAllProjects();
+
+        return projectService.getAllProjects(userId);
     }
 
     @GetMapping("/{id}")
