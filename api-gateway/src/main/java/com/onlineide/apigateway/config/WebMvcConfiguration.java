@@ -28,7 +28,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .allowedHeaders("Content-Type", "Authorization")
                 .allowedOrigins(corsOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
-                .allowCredentials(allowCredentials: true);
+                .allowCredentials(true);
     }
 
 }
