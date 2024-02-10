@@ -64,9 +64,8 @@ export class ProjectsSectionComponent {
   }
 
   private loadProjects() {
-    let options = { headers: new HttpHeaders({'userId': this.userId}) };
     this.apiClientService
-      .getData('/project', options)
+      .postData('/project', { 'userId': this.userId })
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
@@ -83,7 +82,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData('/project', { name: newProjectName }, { headers: new HttpHeaders({'userId': this.userId})})
+      .postData('/project', { name: newProjectName, 'userId': this.userId })
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';

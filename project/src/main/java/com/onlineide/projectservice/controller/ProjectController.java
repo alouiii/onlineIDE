@@ -24,14 +24,14 @@ public class ProjectController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createProject(
             @RequestBody Map<String, String> projectRequest,
-            @RequestHeader("userId") String userId) {
+            @RequestBody String userId) {
 
         return projectService.createProject(projectRequest.get("name"), userId);
     }
 
-    @GetMapping
+    @PostMapping
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> getAllProjects(@RequestHeader("userId") String userId) {
+    public ResponseEntity<?> getAllProjects(@RequestBody String userId) {
 
         return projectService.getAllProjects(userId);
     }
