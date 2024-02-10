@@ -41,7 +41,7 @@ export class AuthService {
   public logout(): void {
     const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
     
-    this.httpClient.post('http://api-gateway-service:8080/logout', {}, { withCredentials: true,  responseType: 'text'})
+    this.httpClient.post('http://34.125.30.158:8080/logout', {}, { withCredentials: true,  responseType: 'text'})
     .subscribe(() => {
       console.log("logged out successfully");
       // Handle successful logout (if needed)
