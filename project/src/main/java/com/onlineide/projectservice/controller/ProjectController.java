@@ -22,9 +22,11 @@ public class ProjectController {
 
     @PostMapping
     @ResponseStatus(code = HttpStatus.CREATED)
-    public ResponseEntity<?> createProject(@RequestBody Map<String, String> projectRequest) {
+    public ResponseEntity<?> createProject(
+            @RequestBody Map<String, String> projectRequest,
+            @RequestHeader("userId") String userId) {
 
-        return projectService.createProject(projectRequest.get("name"));
+        return projectService.createProject(projectRequest.get("name"), userId);
     }
 
     @GetMapping

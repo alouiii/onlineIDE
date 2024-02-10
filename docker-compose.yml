@@ -11,8 +11,9 @@ services:
     networks:
       - springapipostgres-net
 
-  postgresdb:
+  projectservicedb:
     image: "postgres:latest"
+    container_name: projectservicedb
     ports:
     - "5432:5432"
     environment:
@@ -25,14 +26,14 @@ services:
     build:
       context: ./project
       dockerfile: Dockerfile
-    restart: on-failure
+    #restart: on-failure
     image: project-service:latest
     ports:
       - 8081:8081
     networks:
       - springapipostgres-net
     environment:
-      - JDBC_URL= jdbc:postgresql://postgresdb:5432/project-db?user=admin&password=test
+      - JDBC_URL=jdbc:postgresql://projectservicedb:5432/project-db?user=admin&password=test
 
   compiler-service:
     container_name: compiler-service
@@ -44,8 +45,8 @@ services:
       - 8082:8082
     networks:
       - springapipostgres-net
-    depends_on:
-      - project-service
+    # depends_on:
+    #   - project-service
 
   frontend-service:
     container_name: frontend_service
@@ -61,6 +62,36 @@ services:
       - project-service
       - dark-mode-service
       - compiler-service
+
+  api-gateway-service:
+    container_name: api_gateway_service
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 8084:8084
+    networks:
+      - springapipostgres-net
+    # depends_on:
+    #   - project-service
+    #   - dark-mode-service
+    #   - compiler-service
+
+  service-registry-service:
+    container_name: service_registry_service
+    build:
+      context: ./service-registry
+      dockerfile: Dockerfile
+    restart: on-failure
+    ports:
+      - 8761:8761
+    networks:
+      - springapipostgres-net
+    # depends_on:
+    #   - project-service
+    #   - dark-mode-service
+    #   - compiler-service
   
 networks:
   springapipostgres-net:

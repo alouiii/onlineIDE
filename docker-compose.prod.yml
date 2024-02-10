@@ -20,3 +20,13 @@ services:
     restart: on-failure
     ports:
       - 8080:8080
+  api-gateway-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/api-gateway
+    restart: on-failure
+    ports:
+      - 8084:8084
+  service-registry-service:
+    image: gitlab.lrz.de:5005/ase23-seehamer-see/onlineide/service-registry
+    restart: on-failure
+    ports:
+      - 8761:8761
