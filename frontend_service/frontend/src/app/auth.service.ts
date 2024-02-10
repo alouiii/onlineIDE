@@ -66,7 +66,7 @@ export class AuthService {
 
   public login(): void {
     console.log('Initiating OAuth 2.0 login flow');
-    const authorizationUrl = 'http://34.125.30.158:8080/oauth2/authorization/gitlab?redirect_url=http://frontend_service:8084/';
+    const authorizationUrl = 'http://34.125.30.158:8080/oauth2/authorization/gitlab?redirect_url=http://34.125.30.158:8084/';
     window.location.href = authorizationUrl;
   }
 }
