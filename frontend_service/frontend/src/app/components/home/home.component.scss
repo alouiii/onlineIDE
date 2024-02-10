@@ -16,3 +16,117 @@ button {
   font-size: 16px;
   cursor: pointer;
 }
+.animated-background {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+  background: linear-gradient(45deg, #2b004f, #600078, #2b004f, #600078);
+  background-size: 400% 400%;
+  animation: gradientShift 30s ease infinite;
+}
+
+.container {
+  max-width: 600px;
+  margin: 0;
+  color: #ffffff;
+  padding: 20px;
+  text-align: center;
+}
+
+.title {
+  font-size: 2.5em;
+  color: #ffffff;
+  margin-bottom: 0.5em;
+  text-shadow: 2px 2px 4px rgba(12, 140, 219, 0.7);
+}
+
+h1 {
+  font-size: 2em;
+  color: #ffffff;
+  margin-bottom: 0.5em;
+  text-shadow: 2px 2px 4px rgba(62, 32, 125, 0.7);
+}
+
+p {
+  font-size: 1.2em;
+  color: #ccc;
+  margin-bottom: 2em;
+}
+
+button {
+  background: linear-gradient(45deg, #ff8a00, #e52e71);
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 1em;
+  cursor: pointer;
+  margin: 0 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+@keyframes textureFade {
+
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animated-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url('/assets/background.jpg');
+  background-size: cover;
+  animation: textureFade 10s ease infinite;
+  mix-blend-mode: overlay;
+}
+
+.login-button {
+  background: linear-gradient(45deg, #ff8a00, #e52e71);
+  color: #ffffff;
+  border: none;
+  border-radius: 25px;
+  padding: 15px 30px;
+  font-size: 1em;
+  cursor: pointer;
+  margin: 0 10px;
+  box-shadow: 0 4px 6px rgba(101, 8, 8, 0.1);
+  transition: all 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+  }
+}
