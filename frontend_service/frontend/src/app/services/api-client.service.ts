@@ -34,11 +34,16 @@ export class ApiClientService {
     options['withCredentials'] = true ;
     const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
 
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
+    if (options['headers']) {
+      options['headers'].set('Content-Type', 'application/json').set('X-CSRF-TOKEN', csrfToken);
+    } else {
+      options['headers'] = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
+    }
+    
     return this.http.post(
       `${this.baseURL}${url}`,
       data,
-      options ? { headers, ...options } : { headers }
+      options
     );
   }
 

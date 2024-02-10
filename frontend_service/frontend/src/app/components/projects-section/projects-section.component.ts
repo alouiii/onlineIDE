@@ -83,7 +83,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData('/project', { name: newProjectName , headers: new HttpHeaders({'userId': this.userId}) })
+      .postData('/project', { name: newProjectName }, { headers: new HttpHeaders({'userId': this.userId})})
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
