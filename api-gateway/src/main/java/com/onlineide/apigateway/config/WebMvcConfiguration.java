@@ -25,7 +25,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedHeaders("*", "userid") // Allow 'userid' header
+                .allowedHeaders("Content-Type", "Authorization")
                 .allowedOrigins(corsOrigins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
