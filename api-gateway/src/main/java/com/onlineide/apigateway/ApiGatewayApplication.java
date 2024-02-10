@@ -1,10 +1,14 @@
 package com.onlineide.apigateway;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -32,10 +36,21 @@ public class ApiGatewayApplication {
         return "Hello, this is the home page!";
     }
 
-    @GetMapping("/api/user") 
-    public String user() {
-		return SecurityContextHolder.getContext().getAuthentication().getName();
-	}
+    @GetMapping("/api/user")
+    public ResponseEntity<Object> getUser() {
+        try {
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            String username = authentication.getName();
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("userId", username);
+            // You can include additional information if needed
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error retrieving user information");
+        }
+    }
 
     @GetMapping("/authenticated") 
     public boolean authenticated() {

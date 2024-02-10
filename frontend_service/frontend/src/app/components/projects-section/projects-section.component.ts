@@ -58,16 +58,9 @@ export class ProjectsSectionComponent {
         return "";
       })
     ).subscribe((response: any) => {
-      console.log("response", response);
-      this.userId = response;
-      console.log("userId" , this.userId);
-      options = {
-        headers: new HttpHeaders({
-          'userId': this.userId
-        })
-      };
+      this.userId = response['userId'];
+      this.loadProjects();
     });
-    this.loadProjects();
   }
 
   private loadProjects() {
@@ -90,7 +83,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData('/project', { name: newProjectName })
+      .postData('/project', { name: newProjectName , headers: new HttpHeaders({'userId': this.userId}) })
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
