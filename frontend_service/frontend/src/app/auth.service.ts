@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   public checkAuthentication(): void { 
-    this.httpClient.get<boolean>('http://api-gateway-service:8080/authenticated', { withCredentials: true })
+    this.httpClient.get<boolean>('http://34.125.30.158:8080/authenticated', { withCredentials: true })
     .subscribe((authenticated) => { 
       this.authenticated$.next(authenticated);
       console.log("authenticated" , authenticated);
