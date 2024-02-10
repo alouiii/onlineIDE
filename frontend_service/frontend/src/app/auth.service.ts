@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   public checkAuthentication(): void { 
-    this.httpClient.get<boolean>('http://localhost:8080/authenticated', { withCredentials: true })
+    this.httpClient.get<boolean>('http://api-gateway-service:8080/authenticated', { withCredentials: true })
     .subscribe((authenticated) => { 
       this.authenticated$.next(authenticated);
       console.log("authenticated" , authenticated);
@@ -41,7 +41,7 @@ export class AuthService {
   public logout(): void {
     const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
     
-    this.httpClient.post('http://localhost:8080/logout', {}, { withCredentials: true,  responseType: 'text'})
+    this.httpClient.post('http://api-gateway-service:8080/logout', {}, { withCredentials: true,  responseType: 'text'})
     .subscribe(() => {
       console.log("logged out successfully");
       // Handle successful logout (if needed)
@@ -66,7 +66,7 @@ export class AuthService {
 
   public login(): void {
     console.log('Initiating OAuth 2.0 login flow');
-    const authorizationUrl = 'http://localhost:8080/oauth2/authorization/gitlab?redirect_url=http://localhost:8010/';
+    const authorizationUrl = 'http://api-gateway-service:8080/oauth2/authorization/gitlab?redirect_url=http://frontend_service:8084/';
     window.location.href = authorizationUrl;
   }
 }
