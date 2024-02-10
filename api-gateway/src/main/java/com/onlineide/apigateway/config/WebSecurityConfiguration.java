@@ -15,7 +15,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 public class WebSecurityConfiguration {
 
     @Value("${cors.origins}")
-    private String corsOrigins;
+    private String loginPage;
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
