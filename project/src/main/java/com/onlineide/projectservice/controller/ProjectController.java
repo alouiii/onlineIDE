@@ -19,7 +19,7 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping("/{userId}")
+    @PostMapping("/create/{userId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createProject(
             @RequestBody Map<String, String> projectRequest,
