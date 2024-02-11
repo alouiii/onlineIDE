@@ -43,7 +43,7 @@ public class WebSecurityConfiguration {
                     .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler (HttpStatus.OK)))
                 )
                 .csrf(csrf -> {
-                    csrf.ignoringRequestMatchers("/login", "/logout", "/api/**");
+                    csrf.ignoringRequestMatchers("/login", "/logout");
                     csrf.csrfTokenRepository(csrfTokenRepository());
                     csrf.csrfTokenRequestHandler(requestHandler);
                 })
