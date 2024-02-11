@@ -25,7 +25,7 @@ export class ThemeService {
 
   connectToSSE() {
     console.log("connectToSSE function !!");
-    const eventSource = new EventSource('http://34.125.30.158:8080/api' + '/sse/theme/connect');
+    const eventSource = new EventSource('http://34.125.30.158:8080/api' + '/dark-mode/connect');
     console.log(eventSource);
     
     eventSource.addEventListener('connect', (event: any) => {

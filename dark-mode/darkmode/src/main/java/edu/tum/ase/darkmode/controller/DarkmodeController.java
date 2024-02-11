@@ -7,12 +7,21 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import edu.tum.ase.darkmode.service.DarkmodeService;
+import edu.tum.ase.darkmode.service.SseService;
 
 
 @RestController
 @RequestMapping("/api/dark-mode")
 public class DarkmodeController {
 
+	@Autowired
+    private SseService sseService;
+
+	@GetMapping("/connect")
+    public SseEmitter connectToThemeSse() {
+        return sseService.connectToThemeSse();
+    }
+	
     @Autowired
     private DarkmodeService darkmodeService;
 
