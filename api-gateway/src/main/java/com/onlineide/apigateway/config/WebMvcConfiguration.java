@@ -25,7 +25,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         registry.addMapping("/**")
                 .allowedHeaders("*", "x-csrf-token") // Allow 'x-csrf-token' header
                 .allowedOrigins(origins)
-                .allowedMethods("GET", "POST", "PUT", "DELETE")
+                .allowedMethods("*")
                 .allowCredentials(true);
     }
 
