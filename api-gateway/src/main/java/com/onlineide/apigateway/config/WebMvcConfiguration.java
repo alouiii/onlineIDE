@@ -42,7 +42,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                 throws IOException, ServletException {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            httpServletResponse.setHeader("Access-Control-Allow-Origin", null);
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
             chain.doFilter(request, response);
         }
     }
