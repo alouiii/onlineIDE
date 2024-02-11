@@ -21,30 +21,31 @@ export class ApiClientService {
 
   getData(url: string, options?: any): Observable<any> {
     if (!options) {
-      options = {}
+      options = {};
     }
-    options['withCredentials'] = true ;
+    options['withCredentials'] = true;
     return this.http.get(`${this.baseURL}${url}`, options);
   }
 
   postData(url: string, data: any, options?: any): Observable<any> {
     if (!options) {
-      options = {}
+      options = {};
     }
-    options['withCredentials'] = true ;
-    const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
+    options['withCredentials'] = true;
+    const csrfToken = this.getCookie('XSRF-TOKEN') || '';
 
     if (options['headers']) {
-      options['headers'].set('Content-Type', 'application/json').set('X-CSRF-TOKEN', csrfToken);
+      options['headers']
+        .set('Content-Type', 'application/json')
+        .set('X-CSRF-TOKEN', csrfToken);
     } else {
-      options['headers'] = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
+      options['headers'] = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': csrfToken,
+      });
     }
-    
-    return this.http.post(
-      `${this.baseURL}${url}`,
-      data,
-      options
-    );
+
+    return this.http.post(`${this.baseURL}${url}`, data, options);
   }
 
   updateData(url: string, data: any, options?: any): Observable<any> {

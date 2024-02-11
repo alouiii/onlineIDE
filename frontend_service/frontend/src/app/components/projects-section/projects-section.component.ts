@@ -16,6 +16,7 @@ import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-projects-section',
@@ -29,6 +30,8 @@ export class ProjectsSectionComponent {
   projects: Project[] = [];
   showUserIds: boolean = false;
   errorMessage: string = '';
+  private baseUrl = 'http://34.125.30.158:8080/api';
+  private authenticatedBaseUrl = 'http://34.125.30.158:8081/api';
 
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
@@ -42,34 +45,45 @@ export class ProjectsSectionComponent {
     this.showUserIds = !this.showUserIds;
   }
 
-  private userId : any = ""
+  private userId: any = '';
 
   constructor(
+    private authService: AuthService,
     private fileService: FileService,
     private router: Router,
-    private apiClientService: ApiClientService,
+    private apiClientService: ApiClientService
   ) {}
 
   ngOnInit(): void {
-    let options = {};
-    this.apiClientService.getData('/user').pipe(
-      catchError(() => {
-        this.errorMessage = 'Server Error occurred!';
-        return "";
-      })
-    ).subscribe((response: any) => {
-      this.userId = response['userId'];
-      this.loadProjects();
+    this.authService.authenticated.subscribe((isAuthenticated) => {
+      this.baseUrl = isAuthenticated
+        ? this.authenticatedBaseUrl
+        : 'http://34.125.30.158:8080/api';
+      this.initializeUserData();
     });
   }
 
-  private loadProjects() {
+  private initializeUserData() {
     this.apiClientService
-      .getData('/project/getAll/' + this.userId )
+      .getData(`${this.baseUrl}/user`)
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
-          return [];
+          return of('');
+        })
+      )
+      .subscribe((response: any) => {
+        this.userId = response['userId'];
+        this.loadProjects();
+      });
+  }
+  private loadProjects() {
+    this.apiClientService
+      .getData(`${this.baseUrl}/project`)
+      .pipe(
+        catchError(() => {
+          this.errorMessage = 'Server Error occurred!';
+          return of([]);
         })
       )
       .subscribe((response: Project[]) => {
@@ -82,7 +96,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData('/project/' + this.userId, { name: newProjectName })
+      .postData(`${this.baseUrl}/project`, { name: newProjectName })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
@@ -98,7 +112,6 @@ export class ProjectsSectionComponent {
         }
       });
   }
-
   isProjectNameUnique(newName: string, currentProjectId: string): boolean {
     return !this.projects.some(
       (project) => project.name === newName && project.id !== currentProjectId
@@ -114,7 +127,6 @@ export class ProjectsSectionComponent {
     }
     return newProjectId;
   }
-
   renameProject(project: Project, projectName: HTMLInputElement): void {
     if (!this.isProjectNameUnique(project.name, project.id)) {
       this.errorMessage = 'Name already exists!';
@@ -126,15 +138,14 @@ export class ProjectsSectionComponent {
     project.isEditable = false;
     this.isEditable = false;
     this.apiClientService
-      .updateData('/project/' + project.id, { name: project.name })
+      .updateData(`${this.baseUrl}/project/` + project.id, {
+        name: project.name,
+      })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          const errorMessage =
+          this.errorMessage =
             error.error?.message ||
             'An unexpected error occurred. Please try again.';
-          this.errorMessage = errorMessage;
-          projectName.classList.add('error');
-          project.hasErrors = true;
           return of(null);
         })
       )
@@ -150,20 +161,13 @@ export class ProjectsSectionComponent {
 
   openProject(project: Project): void {
     if (!project.hasErrors) {
-      const fileToOpen = this.fileService.files.find(
-        (file) => file.id === project.id
-      );
-      if (fileToOpen) {
-        this.fileService.updateCurrentFile(fileToOpen);
-      }
       this.router.navigate(['/editor/' + project.id]);
     }
   }
 
   deleteProject(projectId: string): void {
-    this.projects = this.projects.filter((project) => project.id !== projectId);
     this.apiClientService
-      .deleteData('/project/' + projectId)
+      .deleteData(`${this.baseUrl}/project/` + projectId)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
