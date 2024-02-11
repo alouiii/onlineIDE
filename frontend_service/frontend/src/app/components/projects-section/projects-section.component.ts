@@ -143,12 +143,9 @@ export class ProjectsSectionComponent {
       })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          const errorMessage =
+          this.errorMessage =
             error.error?.message ||
             'An unexpected error occurred. Please try again.';
-          this.errorMessage = errorMessage;
-          projectName.classList.add('error');
-          project.hasErrors = true;
           return of(null);
         })
       )
@@ -164,19 +161,11 @@ export class ProjectsSectionComponent {
 
   openProject(project: Project): void {
     if (!project.hasErrors) {
-      const fileToOpen = this.fileService.files.find(
-        (file) => file.id === project.id
-      );
-      if (fileToOpen) {
-        this.fileService.updateCurrentFile(fileToOpen);
-      }
       this.router.navigate(['/editor/' + project.id]);
     }
   }
 
   deleteProject(projectId: string): void {
-    this.projects = this.projects.filter((project) => project.id !== projectId);
-
     this.apiClientService
       .deleteData(`${this.baseUrl}/project/` + projectId)
       .pipe(
