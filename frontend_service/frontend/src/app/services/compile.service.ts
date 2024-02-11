@@ -13,7 +13,7 @@ export interface CompileApiResponse {
   providedIn: 'root',
 })
 export class CompileService {
-  private compileUrl = '/api/compile';
+  private compileUrl = '/compile';
   private isMock = false; // Flag to control the mock behavior
   private compileOutputSource = new BehaviorSubject<string>('');
   currentOutput = this.compileOutputSource.asObservable();
