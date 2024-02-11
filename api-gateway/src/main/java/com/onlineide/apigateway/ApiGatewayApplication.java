@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpServletRequest;
 
 @SpringBootApplication
 @RestController
-// @CrossOrigin(origins = "${cors.origins}", maxAge = 3600)
+@CrossOrigin(origins = "${cors.origins}", maxAge = 3600)
 @EnableDiscoveryClient
 public class ApiGatewayApplication {
 
