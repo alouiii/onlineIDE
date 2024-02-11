@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://34.125.30.158:8084", maxAge = 3600)
 @RequestMapping("/api/project")
 public class ProjectController {
 
