@@ -4,6 +4,9 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 @Builder
@@ -20,4 +23,7 @@ public class User {
     private String id;
     @Column(name = "username", unique = true, nullable = false)
     private String username;
+
+    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
+    private Set<Project> projects = new HashSet<>();
 }

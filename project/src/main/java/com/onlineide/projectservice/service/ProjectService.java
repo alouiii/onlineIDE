@@ -48,7 +48,16 @@ public class ProjectService {
                     userRepository.save(newUser);
                     return newUser;
                 });
+
         try {
+            // Check if the user already has a project with the same name
+            boolean hasProjectWithSameName = currentUser.getProjects().stream()
+                    .anyMatch(project -> project.getName().equals(name));
+
+            if (hasProjectWithSameName) {
+                throw new DataIntegrityViolationException("User already has a project with the same name");
+            }
+
             Project project = Project.builder()
                     .name(name)
                     .users(Set.of(currentUser))
