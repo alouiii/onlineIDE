@@ -22,4 +22,22 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
+    @Bean
+    public FilterRegistrationBean<CorsHeaderFilter> corsHeaderFilter() {
+        FilterRegistrationBean<CorsHeaderFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new CorsHeaderFilter());
+        registrationBean.addUrlPatterns("/*");
+        return registrationBean;
+    }
+
+    public class CorsHeaderFilter implements Filter {
+
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+                throws IOException, ServletException {
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", null);
+            chain.doFilter(request, response);
+        }
+    }
 }
