@@ -16,7 +16,6 @@ import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
-import { AuthService } from 'src/app/auth.service';
 
 @Component({
   selector: 'app-projects-section',
@@ -30,8 +29,6 @@ export class ProjectsSectionComponent {
   projects: Project[] = [];
   showUserIds: boolean = false;
   errorMessage: string = '';
-  private baseUrl = 'http://34.125.30.158:8080/api';
-  private authenticatedBaseUrl = 'http://34.125.30.158:8081/api';
 
   @Output() projectNameEdited: EventEmitter<string> =
     new EventEmitter<string>();
@@ -45,45 +42,34 @@ export class ProjectsSectionComponent {
     this.showUserIds = !this.showUserIds;
   }
 
-  private userId: any = '';
+  private userId : any = ""
 
   constructor(
-    private authService: AuthService,
     private fileService: FileService,
     private router: Router,
-    private apiClientService: ApiClientService
+    private apiClientService: ApiClientService,
   ) {}
 
   ngOnInit(): void {
-    this.authService.authenticated.subscribe((isAuthenticated) => {
-      this.baseUrl = isAuthenticated
-        ? this.authenticatedBaseUrl
-        : 'http://34.125.30.158:8080/api';
-      this.initializeUserData();
+    let options = {};
+    this.apiClientService.getData('/user').pipe(
+      catchError(() => {
+        this.errorMessage = 'Server Error occurred!';
+        return "";
+      })
+    ).subscribe((response: any) => {
+      this.userId = response['userId'];
+      this.loadProjects();
     });
   }
 
-  private initializeUserData() {
-    this.apiClientService
-      .getData(`${this.baseUrl}/user`)
-      .pipe(
-        catchError(() => {
-          this.errorMessage = 'Server Error occurred!';
-          return of('');
-        })
-      )
-      .subscribe((response: any) => {
-        this.userId = response['userId'];
-        this.loadProjects();
-      });
-  }
   private loadProjects() {
     this.apiClientService
-      .getData(`${this.baseUrl}/project`)
+      .getData('/project/getAll/' + this.userId )
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
-          return of([]);
+          return [];
         })
       )
       .subscribe((response: Project[]) => {
@@ -96,7 +82,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData(`${this.baseUrl}/project`, { name: newProjectName })
+      .postData('/project/' + this.userId, { name: newProjectName })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
@@ -112,6 +98,7 @@ export class ProjectsSectionComponent {
         }
       });
   }
+
   isProjectNameUnique(newName: string, currentProjectId: string): boolean {
     return !this.projects.some(
       (project) => project.name === newName && project.id !== currentProjectId
@@ -127,6 +114,7 @@ export class ProjectsSectionComponent {
     }
     return newProjectId;
   }
+
   renameProject(project: Project, projectName: HTMLInputElement): void {
     if (!this.isProjectNameUnique(project.name, project.id)) {
       this.errorMessage = 'Name already exists!';
@@ -138,9 +126,7 @@ export class ProjectsSectionComponent {
     project.isEditable = false;
     this.isEditable = false;
     this.apiClientService
-      .updateData(`${this.baseUrl}/project/` + project.id, {
-        name: project.name,
-      })
+      .updateData('/project/' + project.id, { name: project.name })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
@@ -167,7 +153,7 @@ export class ProjectsSectionComponent {
 
   deleteProject(projectId: string): void {
     this.apiClientService
-      .deleteData(`${this.baseUrl}/project/` + projectId)
+      .deleteData('/project/' + projectId)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
