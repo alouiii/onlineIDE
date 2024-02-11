@@ -69,10 +69,14 @@ export class FileService {
     });
   }
 
-  renameFile(file: File, newName: string) {
-    this.apiClientService
-      .updateData(`/file/${file.id}`, { fileName: newName })
-      .subscribe(() => {
+  renameFile(file: File, newName: string, code: string) {
+    this.isRenaming = true;
+    const data = {
+      fileName: newName,
+      code: code,
+    };
+    this.apiClientService.updateData(`/file/${file.id}`, data).subscribe({
+      next: () => {
         console.log('RENAME file');
         const index = this.currentProjectFiles.indexOf(file);
         if (index !== -1) {
@@ -85,9 +89,14 @@ export class FileService {
             this.currentFile = updatedFile;
           }
         }
-      });
+        this.isRenaming = false;
+      },
+      error: (error) => {
+        console.error('Error renaming file:', error);
+        this.isRenaming = false;
+      },
+    });
   }
-
   shareProject(username: string) {
     if (this.currentProject !== null) {
       this.apiClientService

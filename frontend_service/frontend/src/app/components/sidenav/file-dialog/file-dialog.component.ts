@@ -72,9 +72,9 @@ export class DialogAnimationsDialog {
     this.fileService.addFile(name);
   }
 
-  private renameFile(newName: string) {
+  private renameFile(newName: string, code: string) {
     if (this.fileService.selectedFile !== null) {
-      this.fileService.renameFile(this.fileService.selectedFile, newName);
+      this.fileService.renameFile(this.fileService.selectedFile, newName, code);
       this.fileService.isRenaming = false;
     }
   }
@@ -85,9 +85,9 @@ export class DialogAnimationsDialog {
     this.router.navigate(['/projects']);
   }
 
-  performAction(inputValue: string): void {
+  performAction(inputValue: string, code: string): void {
     if (this.fileService.isRenaming) {
-      this.renameFile(inputValue);
+      this.renameFile(inputValue, code);
     } else if (this.fileService.isSharing) {
       this.shareProject(inputValue);
     } else {
