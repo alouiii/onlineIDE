@@ -7,6 +7,7 @@ import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -14,6 +15,7 @@ import java.io.IOException;
 
 
 @Configuration
+@EnableWebMvc
 public class WebMvcConfiguration implements WebMvcConfigurer {
 
     @Value("${cors.origins}")
@@ -24,36 +26,36 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         String[] origins = corsOrigins.split(",");
         registry.addMapping("/**")
                 .allowedHeaders("*", "x-csrf-token") // Allow 'x-csrf-token' header
-                .allowedOrigins("*")
+                .allowedOrigins(corsOrigins)
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
 
-    // @Bean
-    // public FilterRegistrationBean<CorsHeaderFilter> corsHeaderFilter() {
-    //     FilterRegistrationBean<CorsHeaderFilter> registrationBean = new FilterRegistrationBean<>();
-    //     registrationBean.setFilter(new CorsHeaderFilter());
-    //     registrationBean.addUrlPatterns("/*");
-    //     return registrationBean;
-    // }
+    @Bean
+    public FilterRegistrationBean<CorsHeaderFilter> corsHeaderFilter() {
+        FilterRegistrationBean<CorsHeaderFilter> registrationBean = new FilterRegistrationBean<>();
+        registrationBean.setFilter(new CorsHeaderFilter());
+        registrationBean.addUrlPatterns("/*");
+        return registrationBean;
+    }
 
-    // public class CorsHeaderFilter implements Filter {
+    public class CorsHeaderFilter implements Filter {
 
-    //     @Override
-    //     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-    //             throws IOException, ServletException {
-    //         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-    //         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+        @Override
+        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+                throws IOException, ServletException {
+            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-    //         httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
+            httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
 
-    //         // Preflight request. Reply successfully:
-    //         if (httpServletRequest.getMethod().equals("OPTIONS")) {
-    //             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-    //             return;
-    //         }
+            // Preflight request. Reply successfully:
+            if (httpServletRequest.getMethod().equals("OPTIONS")) {
+                httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
 
-    //         chain.doFilter(request, response);
-    //     }
-    // }
+            chain.doFilter(request, response);
+        }
+    }
 }
