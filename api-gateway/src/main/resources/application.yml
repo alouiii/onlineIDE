@@ -14,7 +14,7 @@ spring:
           - id: dark-mode
             uri: lb://dark-mode
             predicates:
-              - Path=/api/dark-mode/toggle
+              - Path=/api/dark-mode/**
           - id: service-registry
             uri: http://localhost:8761
             predicates:
