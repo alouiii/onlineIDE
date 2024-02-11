@@ -51,10 +51,10 @@ public class WebSecurityConfiguration {
                 .build();
     }
 
-    @Bean
-    public CsrfTokenRepository csrfTokenRepository() {
-        CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
-        repository.setCookiePath("/");
-        return repository;
-    }
+    // @Bean
+    // public CsrfTokenRepository csrfTokenRepository() {
+    //     CookieCsrfTokenRepository repository = CookieCsrfTokenRepository.withHttpOnlyFalse();
+    //     repository.setCookiePath("/");
+    //     return repository;
+    // }
 }
