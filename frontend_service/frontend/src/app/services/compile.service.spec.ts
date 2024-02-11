@@ -36,7 +36,7 @@ describe('CompileService', () => {
     });
 
     // Expect a request with the correct URL and method
-    const req = httpTestingController.expectOne('/api/compiler');
+    const req = httpTestingController.expectOne('/api/compile');
     expect(req.request.method).toEqual('POST');
     expect(req.request.body).toEqual({ code: testCode });
 
