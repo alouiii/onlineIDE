@@ -50,12 +50,14 @@ public class ProjectService {
                 });
 
         try {
-            // Check if the user already has a project with the same name
-            boolean hasProjectWithSameName = currentUser.getProjects().stream()
-                    .anyMatch(project -> project.getName().equals(name));
-
-            if (hasProjectWithSameName) {
-                throw new DataIntegrityViolationException("User already has a project with the same name");
+            List<Project> projects = projectRepository.findByName(name);
+            for (Project project : projects) {
+                boolean userExistsInProject = project.getUsers().stream()
+                        .anyMatch(user -> user.getUsername().equals(userId));
+                if (userExistsInProject) {
+                    log.info("the current user already has a project with name: {} ", name);
+                    throw new DataIntegrityViolationException("project with name: " + name + " already exists for the current user!");
+                }
             }
 
             Project project = Project.builder()
@@ -68,9 +70,9 @@ public class ProjectService {
             return ResponseEntity.status(HttpStatus.CREATED)
                     .body(ProjectResponse.fromProject(project));
         } catch (DataIntegrityViolationException e) {
-            log.info("project with name: {} already exists", name);
+            log.info("project with name: {} already exists for the current user!", name);
             return ResponseEntity.status(HttpStatus.CONFLICT)
-                    .body(new ErrorResponse("project with name: " + name + " already exists!"));
+                    .body(new ErrorResponse(e.getMessage()));
         } catch (Exception e) {
             log.info("error creating project: {}", e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
