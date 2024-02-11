@@ -20,7 +20,7 @@ public class DarkmodeApplicationTests {
     @Test
     public void getDarkModeStatusTest() throws Exception {
         // Perform a GET request to the /dark-mode endpoint
-        mockMvc.perform(MockMvcRequestBuilders.get("/dark-mode"))
+        mockMvc.perform(MockMvcRequestBuilders.get("api/dark-mode"))
                 // Expect the status to be 200 OK
                 .andExpect(status().isOk())
                 // Expect the content to be "false" since dark mode is disabled by default

@@ -24,7 +24,7 @@ public class Project {
     @GenericGenerator(name="system-uuid", strategy = "uuid")
     @Column(name = "project_id")
     private String id;
-    @Column(name = "name", unique = true, nullable = false)
+    @Column(name = "name", nullable = false)
     @NotBlank(message = "Project name is mandatory")
     private String name;
 

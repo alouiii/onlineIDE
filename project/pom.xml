@@ -80,4 +80,19 @@
 		</plugins>
 	</build>
 
+	<profiles>
+	<profile>
+		<id>package</id>
+		<activation>
+		<property>
+			<name>phase</name>
+			<value>package</value>
+		</property>
+		</activation>
+		<properties>
+		<spring.profiles.active>no-db-check</spring.profiles.active>
+		</properties>
+	</profile>
+	</profiles>
+
 </project>

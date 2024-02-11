@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { Router } from '@angular/router';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { ThemeService } from 'src/app/services/theme.service';
+import { AuthService } from 'src/app/auth.service';
 
 @Component({
   standalone: true,
@@ -21,11 +22,8 @@ import { ThemeService } from 'src/app/services/theme.service';
   ],
 })
 export class NavbarComponent {
-  constructor(private router: Router, private themeService: ThemeService) {}
+  constructor(private router: Router, private themeService: ThemeService, public authService: AuthService) {}
 
-  logout() {
-    this.router.navigate(['']);
-  }
 
   toggleTheme() {
     this.themeService.toggleTheme();
