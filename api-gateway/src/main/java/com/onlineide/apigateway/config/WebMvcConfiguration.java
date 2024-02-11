@@ -29,31 +29,31 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
                 .allowCredentials(true);
     }
 
-    @Bean
-    public FilterRegistrationBean<CorsHeaderFilter> corsHeaderFilter() {
-        FilterRegistrationBean<CorsHeaderFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(new CorsHeaderFilter());
-        registrationBean.addUrlPatterns("/*");
-        return registrationBean;
-    }
+    // @Bean
+    // public FilterRegistrationBean<CorsHeaderFilter> corsHeaderFilter() {
+    //     FilterRegistrationBean<CorsHeaderFilter> registrationBean = new FilterRegistrationBean<>();
+    //     registrationBean.setFilter(new CorsHeaderFilter());
+    //     registrationBean.addUrlPatterns("/*");
+    //     return registrationBean;
+    // }
 
-    public class CorsHeaderFilter implements Filter {
+    // public class CorsHeaderFilter implements Filter {
 
-        @Override
-        public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
-                throws IOException, ServletException {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+    //     @Override
+    //     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+    //             throws IOException, ServletException {
+    //         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+    //         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 
-            httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
+    //         httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
 
-            // Preflight request. Reply successfully:
-            if (httpServletRequest.getMethod().equals("OPTIONS")) {
-                httpServletResponse.setStatus(HttpServletResponse.SC_OK);
-                return;
-            }
+    //         // Preflight request. Reply successfully:
+    //         if (httpServletRequest.getMethod().equals("OPTIONS")) {
+    //             httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+    //             return;
+    //         }
 
-            chain.doFilter(request, response);
-        }
-    }
+    //         chain.doFilter(request, response);
+    //     }
+    // }
 }
