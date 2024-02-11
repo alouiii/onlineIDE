@@ -20,9 +20,9 @@ public class WebSecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
-        delegate.setCsrfRequestAttributeName("_csrf");
-        CsrfTokenRequestHandler requestHandler = delegate::handle;
+        // XorCsrfTokenRequestAttributeHandler delegate = new XorCsrfTokenRequestAttributeHandler();
+        // delegate.setCsrfRequestAttributeName("_csrf");
+        // CsrfTokenRequestHandler requestHandler = delegate::handle;
         return http.
                 authorizeHttpRequests(auth -> {
                     auth.requestMatchers("/api/**").authenticated();
@@ -43,10 +43,10 @@ public class WebSecurityConfiguration {
                     .logoutSuccessHandler((new HttpStatusReturningLogoutSuccessHandler (HttpStatus.OK)))
                 )
                 .csrf(csrf -> {
-                    // csrf.disable();
-                    csrf.ignoringRequestMatchers("/login", "/logout");
-                    csrf.csrfTokenRepository(csrfTokenRepository());
-                    csrf.csrfTokenRequestHandler(requestHandler);
+                    csrf.disable();
+                    // csrf.ignoringRequestMatchers("/login", "/logout");
+                    // csrf.csrfTokenRepository(csrfTokenRepository());
+                    // csrf.csrfTokenRequestHandler(requestHandler);
                 })
                 .build();
     }
