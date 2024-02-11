@@ -24,9 +24,10 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
     }
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        String[] origins = corsOrigins.split(",");
         registry.addMapping("/**")
                 .allowedHeaders("*", "x-csrf-token") // Allow 'x-csrf-token' header
-                .allowedOrigins(corsOrigins)
+                .allowedOrigins(origins)
                 .allowedMethods("GET", "POST", "PUT", "DELETE")
                 .allowCredentials(true);
     }
