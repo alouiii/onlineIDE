@@ -20,20 +20,20 @@ public class ProjectController {
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping
+    @PostMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createProject(
             @RequestBody Map<String, String> projectRequest,
-            @RequestBody Map<String, String> userRequest) {
+            @PathVariable String userId) {
 
-        return projectService.createProject(projectRequest.get("name"), userRequest.get("userId"));
+        return projectService.createProject(projectRequest.get("name"), userId);
     }
 
-    @PostMapping("/getAll")
+    @GetMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> getAllProjects(@RequestBody Map<String, String> userRequest) {
+    public ResponseEntity<?> getAllProjects(@PathVariable String userId) {
 
-        return projectService.getAllProjects(userRequest.get("userId"));
+        return projectService.getAllProjects(userId);
     }
 
     @GetMapping("/{id}")
