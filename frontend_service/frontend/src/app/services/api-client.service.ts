@@ -48,15 +48,37 @@ export class ApiClientService {
   }
 
   updateData(url: string, data: any, options?: any): Observable<any> {
-    const headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+
+    if (!options) {
+      options = {}
+    }
+    options['withCredentials'] = true ;
+    const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
+
+    if (options['headers']) {
+      options['headers'].set('Content-Type', 'application/json').set('X-CSRF-TOKEN', csrfToken);
+    } else {
+      options['headers'] = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
+    }
     return this.http.put(
       `${this.baseURL}${url}`,
       data,
-      options ? { headers, ...options } : { headers }
+      options
     );
   }
 
   deleteData(url: string, options?: any): Observable<any> {
+    if (!options) {
+      options = {}
+    }
+    options['withCredentials'] = true ;
+    const csrfToken = this.getCookie('XSRF-TOKEN')|| '';
+
+    if (options['headers']) {
+      options['headers'].set('Content-Type', 'application/json').set('X-CSRF-TOKEN', csrfToken);
+    } else {
+      options['headers'] = new HttpHeaders({ 'Content-Type': 'application/json' , 'X-CSRF-TOKEN': csrfToken});
+    }
     return this.http.delete(`${this.baseURL}${url}`, options);
   }
 }
