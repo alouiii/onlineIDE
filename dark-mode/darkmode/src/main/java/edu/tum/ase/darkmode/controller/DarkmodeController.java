@@ -14,13 +14,12 @@ import edu.tum.ase.darkmode.service.SseService;
 import java.io.*;
 
 @RestController
-@RequestMapping("/api/dark-mode")
 public class DarkmodeController {
 
 	@Autowired
     private SseService sseService;
 
-	@GetMapping("/connect")
+	@GetMapping("/dark-mode/connect")
     public SseEmitter connectToThemeSse() {
         return sseService.connectToThemeSse();
     }
@@ -28,12 +27,12 @@ public class DarkmodeController {
     @Autowired
     private DarkmodeService darkmodeService;
 
-    @RequestMapping(path = "/toggle", method = RequestMethod.GET)
+    @RequestMapping(path = "/api/dark-mode/toggle", method = RequestMethod.GET)
 	public void toggleDarkMode() {
 		darkmodeService.toggleDarkMode();
 	}
 
-	@RequestMapping(path = "/", method = RequestMethod.GET)
+	@RequestMapping(path = "/api/dark-mode/", method = RequestMethod.GET)
 	public boolean getDarkModeStatus(){
 		return darkmodeService.getDarkModeStatus();
 	}
