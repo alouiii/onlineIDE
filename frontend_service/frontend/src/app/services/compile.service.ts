@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, BehaviorSubject, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ApiClientService } from './api-client.service';
 
 export interface CompileApiResponse {
   output: string;
@@ -17,7 +18,7 @@ export class CompileService {
   private compileOutputSource = new BehaviorSubject<string>('');
   currentOutput = this.compileOutputSource.asObservable();
 
-  constructor(private http: HttpClient) {}
+  constructor(private apiClientService: ApiClientService) {}
 
   compileCode(code: string): Observable<any> {
     if (this.isMock) {
@@ -27,8 +28,8 @@ export class CompileService {
       return of({ output: mockOutput });
     } else {
       // Actual HTTP request
-      return this.http.post<CompileApiResponse>(this.compileUrl, { code }).pipe(
-        tap((response) => {
+      return this.apiClientService.postData(this.compileUrl, { code }).pipe(
+        tap((response: CompileApiResponse) => {
           this.compileOutputSource.next(response.output);
         })
       );
