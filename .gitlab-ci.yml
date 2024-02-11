@@ -113,6 +113,7 @@ compiler_package:
 
 compiler_publish:
   stage: publish
+  needs: ["dark_mode_publish"]
   image: docker:stable
   services:
     - docker:25.0.2-dind
@@ -169,6 +170,7 @@ project_package:
 
 project_publish:
   stage: publish
+  needs: ["compiler_publish"]
   image: docker:stable
   services:
     - docker:25.0.2-dind
@@ -286,6 +288,7 @@ api_gateway_package:
 
 api_gateway_publish:
   stage: publish
+  needs: ["service_registry_publish"]
   image: docker:stable
   services:
     - docker:25.0.2-dind
@@ -343,6 +346,7 @@ service_registry_package:
 
 service_registry_publish:
   stage: publish
+  needs: ["frontend_service_publish"]
   image: docker:stable
   services:
     - docker:25.0.2-dind
