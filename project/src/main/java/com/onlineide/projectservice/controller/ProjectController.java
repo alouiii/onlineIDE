@@ -24,16 +24,16 @@ public class ProjectController {
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createProject(
             @RequestBody Map<String, String> projectRequest,
-            @RequestBody String userId) {
+            @RequestBody Map<String, String> userRequest) {
 
-        return projectService.createProject(projectRequest.get("name"), userId);
+        return projectService.createProject(projectRequest.get("name"), userRequest.get("userId"));
     }
 
     @PostMapping("/getAll")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> getAllProjects(@RequestBody String userId) {
+    public ResponseEntity<?> getAllProjects(@RequestBody Map<String, String> userRequest) {
 
-        return projectService.getAllProjects(userId);
+        return projectService.getAllProjects(userRequest.get("userId"));
     }
 
     @GetMapping("/{id}")
