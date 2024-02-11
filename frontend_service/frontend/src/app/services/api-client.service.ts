@@ -1,14 +1,24 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { AuthService } from 'src/app/auth.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ApiClientService {
   private baseURL = 'http://34.125.30.158:8080/api';
+  private authenticatedBaseUrl = 'http://34.125.30.158:8081/api';
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient, private authService: AuthService) {
+    this.authService.authenticated.subscribe((isAuthenticated) => {
+      if (isAuthenticated) {
+        this.baseURL = this.authenticatedBaseUrl;
+      } else {
+        this.baseURL = 'http://34.125.30.158:8080/api';
+      }
+    });
+  }
 
   private getCookie(name: string): string | null {
     const value = `; ${document.cookie}`;
@@ -24,7 +34,8 @@ export class ApiClientService {
       options = {};
     }
     options['withCredentials'] = true;
-    return this.http.get(`${this.baseURL}${url}`, options);
+    const fullUrl = `${this.baseURL}${url}`;
+    return this.http.get(fullUrl, options);
   }
 
   postData(url: string, data: any, options?: any): Observable<any> {
