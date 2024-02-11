@@ -12,8 +12,8 @@ export interface CompileApiResponse {
   providedIn: 'root',
 })
 export class CompileService {
-  private compileUrl = '/api/compiler';
-  private isMock = true; // Flag to control the mock behavior
+  private compileUrl = '/api/compile';
+  private isMock = false; // Flag to control the mock behavior
   private compileOutputSource = new BehaviorSubject<string>('');
   currentOutput = this.compileOutputSource.asObservable();
 
@@ -22,7 +22,7 @@ export class CompileService {
   compileCode(code: string): Observable<any> {
     if (this.isMock) {
       // Mock response
-      const mockOutput = `Mocked output for code: ${code}`;
+      const mockOutput = `${code}`;
       this.compileOutputSource.next(mockOutput);
       return of({ output: mockOutput });
     } else {
