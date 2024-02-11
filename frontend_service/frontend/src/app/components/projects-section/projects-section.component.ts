@@ -105,14 +105,19 @@ export class ProjectsSectionComponent {
     );
   }
 
-  private generateUniqueProjectId(): number {
-    let newProjectId = this.projects.length + 1;
-    while (
-      this.projects.some((project) => project.id === newProjectId.toString())
-    ) {
-      newProjectId++;
-    }
-    return newProjectId;
+  private generateUniqueProjectId(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const idLength = 10; // You can adjust the length of the random string as needed
+    let randomId = '';
+  
+    do {
+      for (let i = 0; i < idLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        randomId += characters[randomIndex];
+      }
+    } while (this.projects.some((project) => project.id === randomId));
+  
+    return randomId;
   }
 
   renameProject(project: Project, projectName: HTMLInputElement): void {
