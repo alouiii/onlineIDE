@@ -23,7 +23,4 @@ public class User {
     private String id;
     @Column(name = "username", unique = true, nullable = false)
     private String username;
-
-    @ManyToMany(mappedBy = "users", fetch = FetchType.LAZY, cascade = CascadeType.MERGE)
-    private Set<Project> projects = new HashSet<>();
 }
