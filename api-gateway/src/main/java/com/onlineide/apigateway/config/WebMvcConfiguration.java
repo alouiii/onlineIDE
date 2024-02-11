@@ -1,6 +1,7 @@
 package com.onlineide.apigateway.config;
 
 import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
@@ -42,7 +43,16 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
                 throws IOException, ServletException {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
+            HttpServletRequest httpServletRequest = (HttpServletRequest) request;
+
             httpServletResponse.setHeader("Access-Control-Allow-Origin", corsOrigins);
+
+            // Preflight request. Reply successfully:
+            if (httpServletRequest.getMethod().equals("OPTIONS")) {
+                httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+                return;
+            }
+
             chain.doFilter(request, response);
         }
     }
