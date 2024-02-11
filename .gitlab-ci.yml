@@ -45,7 +45,7 @@ frontend_service_package:
     - mvn clean compile
     - cd frontend
     - npm install
-    - $env:NG_CLI_ANALYTICS="off"; ng build --output-path=../src/main/resources/static
+    - $env:NG_CLI_ANALYTICS="off"; ng build --output-path=../src/main/resources/static --configuration production
     - cd ..
     - mvn package
   variables:
@@ -153,6 +153,8 @@ project_test:
     - echo "Testing the project-service"
     - cd project
     - mvn test
+  variables:
+    MAVEN_OPTS: "-Dphase=package" 
 
 project_package:
   stage: package
@@ -162,7 +164,7 @@ project_package:
     - cd project
     - mvn package
   variables:
-    MAVEN_OPTS: "-DskipTests=true"
+    MAVEN_OPTS: "-Dphase=package -DskipTests=true"
   artifacts:
     paths:
       - project/target/
@@ -192,7 +194,7 @@ project_publish:
 darkmode_build:
   stage: build
   script:
-    - git fetch --prune # Ensure always running the last version 
+    - git fetch --prune # Ensure always running the last version. 
     - del .git/shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
     - echo "Building the dark-mode"
     - echo "Current directory... $(Get-Location)"
@@ -216,7 +218,7 @@ dark_mode_package:
     - cd dark-mode/darkmode
     - mvn package
   variables:
-    MAVEN_OPTS: "-DskipTests=true"
+    MAVEN_OPTS: "-Dphase=package -DskipTests=true"
   artifacts:
     paths:
       - dark-mode/darkmode/target/
