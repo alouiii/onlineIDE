@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
+import { ApiClientService } from './api-client.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class ThemeService {
 
   connectToSSE() {
     console.log("connectToSSE function !!");
-    const eventSource = new EventSource('http://localhost:8080/sse/theme/connect');
+    const eventSource = new EventSource('http://34.125.30.158:8080/api' + '/sse/theme/connect');
     console.log(eventSource);
     
     eventSource.addEventListener('connect', (event: any) => {

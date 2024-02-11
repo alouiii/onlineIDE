@@ -15,7 +15,7 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import edu.tum.ase.darkmode.service.SseService;
 
 @RestController
-@RequestMapping("/sse/theme")
+@RequestMapping("/api/sse/theme")
 public class SseController {
 
     @Autowired
