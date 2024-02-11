@@ -6,7 +6,7 @@ spring:
           - id: project-service
             uri: lb://project-service
             predicates:
-              - Path=/api/project/**, /api/file/**
+              - Path=/api/project/**
           - id: compiler-service
             uri: lb://compiler-service
             predicates:
