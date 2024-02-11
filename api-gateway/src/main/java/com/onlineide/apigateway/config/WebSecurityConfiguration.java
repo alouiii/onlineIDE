@@ -44,7 +44,7 @@ public class WebSecurityConfiguration {
                 )
                 .csrf(csrf -> {
                     // csrf.disable();
-                    csrf.ignoringRequestMatchers("/login", "/logout", "/api/**");
+                    csrf.ignoringRequestMatchers("/login", "/logout");
                     csrf.csrfTokenRepository(csrfTokenRepository());
                     csrf.csrfTokenRequestHandler(requestHandler);
                 })
