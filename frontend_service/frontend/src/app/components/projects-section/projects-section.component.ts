@@ -80,7 +80,7 @@ export class ProjectsSectionComponent {
   }
   private loadProjects() {
     this.apiClientService
-      .getData(`${this.baseUrl}/project`)
+      .getData(`/project`)
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
@@ -97,7 +97,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData(`${this.baseUrl}/project`, { name: newProjectName })
+      .postData(`/project`, { name: newProjectName })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
