@@ -29,7 +29,7 @@ public class ProjectController {
         return projectService.createProject(projectRequest.get("name"), userId);
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/getAll/{userId}")
     @ResponseStatus(code = HttpStatus.OK)
     public ResponseEntity<?> getAllProjects(@PathVariable String userId) {
 

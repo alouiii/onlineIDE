@@ -65,7 +65,7 @@ export class ProjectsSectionComponent {
 
   private loadProjects() {
     this.apiClientService
-      .getData('/project/' + this.userId )
+      .getData('/project/getAll/' + this.userId )
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
