@@ -15,7 +15,7 @@ import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
 import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { catchError } from 'rxjs';
+import { catchError, of } from 'rxjs';
 
 @Component({
   selector: 'app-projects-section',
@@ -84,14 +84,25 @@ export class ProjectsSectionComponent {
     this.apiClientService
       .postData('/project/' + this.userId, { name: newProjectName })
       .pipe(
-        catchError(() => {
-          this.errorMessage = 'Server Error occurred!';
-          return [];
+        catchError((error: HttpErrorResponse) => {
+          this.errorMessage =
+            error.error?.message ||
+            'An unexpected error occurred. Please try again.';
+          return of(null);
         })
       )
-      .subscribe((response: Project) => {
-        this.projects.push(response);
+      .subscribe((response: Project | null) => {
+        if (response) {
+          this.projects.push(response);
+          this.errorMessage = '';
+        }
       });
+  }
+
+  isProjectNameUnique(newName: string, currentProjectId: string): boolean {
+    return !this.projects.some(
+      (project) => project.name === newName && project.id !== currentProjectId
+    );
   }
 
   private generateUniqueProjectId(): number {
@@ -104,25 +115,36 @@ export class ProjectsSectionComponent {
     return newProjectId;
   }
 
-  renameProject(project: Project): void {
+  renameProject(project: Project, projectName: HTMLInputElement): void {
+    if (!this.isProjectNameUnique(project.name, project.id)) {
+      this.errorMessage = 'Name already exists!';
+      projectName.classList.add('error');
+      projectName.focus();
+      return;
+    }
+
     project.isEditable = false;
     this.isEditable = false;
     this.apiClientService
-      .updateData('/project/' + project.id, project)
+      .updateData('/project/' + project.id, { name: project.name })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          if (error.status === 409) {
-            this.errorMessage = 'A project with that name already exists!';
-            project.hasErrors = true;
-          } else {
-            this.errorMessage = 'Server Error occurred!';
-          }
-          return [];
+          const errorMessage =
+            error.error?.message ||
+            'An unexpected error occurred. Please try again.';
+          this.errorMessage = errorMessage;
+          projectName.classList.add('error');
+          project.hasErrors = true;
+          return of(null);
         })
       )
-      .subscribe(() => {
-        this.errorMessage = '';
-        project.hasErrors = false;
+      .subscribe((response: Project | null) => {
+        if (response) {
+          this.errorMessage = '';
+          projectName.classList.remove('error');
+          project.hasErrors = false;
+          this.loadProjects();
+        }
       });
   }
 
@@ -143,11 +165,18 @@ export class ProjectsSectionComponent {
     this.apiClientService
       .deleteData('/project/' + projectId)
       .pipe(
-        catchError(() => {
-          this.errorMessage = 'Server Error occurred!';
-          return [];
+        catchError((error: HttpErrorResponse) => {
+          this.errorMessage =
+            error.error?.message ||
+            'An unexpected error occurred while trying to delete the project. Please try again.';
+          return of(null);
         })
       )
-      .subscribe();
+      .subscribe(() => {
+        this.projects = this.projects.filter(
+          (project) => project.id !== projectId
+        );
+        this.errorMessage = '';
+      });
   }
 }
