@@ -24,7 +24,7 @@ public class WebMvcConfiguration implements WebMvcConfigurer {
         String[] origins = corsOrigins.split(",");
         registry.addMapping("/**")
                 .allowedHeaders("*", "x-csrf-token") // Allow 'x-csrf-token' header
-                .allowedOrigins(origins)
+                .allowedOrigins("*")
                 .allowedMethods("*")
                 .allowCredentials(true);
     }
