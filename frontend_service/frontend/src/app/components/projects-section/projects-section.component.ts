@@ -64,8 +64,9 @@ export class ProjectsSectionComponent {
   }
 
   private initializeUserData() {
+    this.apiClientService;
     this.apiClientService
-      .getData(`${this.baseUrl}/user`)
+      .getData('/user')
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
@@ -138,7 +139,7 @@ export class ProjectsSectionComponent {
     project.isEditable = false;
     this.isEditable = false;
     this.apiClientService
-      .updateData(`${this.baseUrl}/project/` + project.id, {
+      .updateData(`/project/` + project.id, {
         name: project.name,
       })
       .pipe(
@@ -178,7 +179,7 @@ export class ProjectsSectionComponent {
     this.projects = this.projects.filter((project) => project.id !== projectId);
 
     this.apiClientService
-      .deleteData(`${this.baseUrl}/project/` + projectId)
+      .deleteData(`/project/` + projectId)
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
