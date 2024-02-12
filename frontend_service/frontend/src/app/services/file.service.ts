@@ -57,7 +57,7 @@ export class FileService {
   }
 
   removeFile(file: File) {
-    this.apiClientService.deleteData(`/file/${file.id}`).subscribe(() => {
+    this.apiClientService.deleteData(`/project/file/${file.id}`).subscribe(() => {
       console.log('DELETE file');
       const index = this.currentProjectFiles.indexOf(file);
       if (index !== -1) {
@@ -75,7 +75,7 @@ export class FileService {
       fileName: newName,
       code: code,
     };
-    this.apiClientService.updateData(`/file/${file.id}`, data).subscribe({
+    this.apiClientService.updateData(`/project/file/${file.id}`, data).subscribe({
       next: () => {
         console.log('RENAME file');
         const index = this.currentProjectFiles.indexOf(file);

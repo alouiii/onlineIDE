@@ -13,25 +13,24 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@CrossOrigin
 @RequestMapping("/api/project")
 public class ProjectController {
 
     @Autowired
     private ProjectService projectService;
 
-    @PostMapping
+    @PostMapping("/{userId}")
     @ResponseStatus(code = HttpStatus.CREATED)
     public ResponseEntity<?> createProject(
             @RequestBody Map<String, String> projectRequest,
-            @RequestHeader("userId") String userId) {
+            @PathVariable String userId) {
 
         return projectService.createProject(projectRequest.get("name"), userId);
     }
 
-    @GetMapping
+    @GetMapping("/getAll/{userId}")
     @ResponseStatus(code = HttpStatus.OK)
-    public ResponseEntity<?> getAllProjects(@RequestHeader("userId") String userId) {
+    public ResponseEntity<?> getAllProjects(@PathVariable String userId) {
 
         return projectService.getAllProjects(userId);
     }

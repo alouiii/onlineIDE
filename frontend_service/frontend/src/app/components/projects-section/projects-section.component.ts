@@ -14,7 +14,7 @@ import { NavbarComponent } from '../navbar/navbar.component';
 import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project';
 import { ApiClientService } from 'src/app/services/api-client.service';
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpHeaders } from '@angular/common/http';
 import { catchError, of } from 'rxjs';
 
 @Component({
@@ -42,19 +42,30 @@ export class ProjectsSectionComponent {
     this.showUserIds = !this.showUserIds;
   }
 
+  private userId : any = ""
+
   constructor(
     private fileService: FileService,
     private router: Router,
-    private apiClientService: ApiClientService
+    private apiClientService: ApiClientService,
   ) {}
 
   ngOnInit(): void {
-    this.loadProjects();
+    let options = {};
+    this.apiClientService.getData('/user').pipe(
+      catchError(() => {
+        this.errorMessage = 'Server Error occurred!';
+        return "";
+      })
+    ).subscribe((response: any) => {
+      this.userId = response['userId'];
+      this.loadProjects();
+    });
   }
 
   private loadProjects() {
     this.apiClientService
-      .getData('/project')
+      .getData('/project/getAll/' + this.userId )
       .pipe(
         catchError(() => {
           this.errorMessage = 'Server Error occurred!';
@@ -71,7 +82,7 @@ export class ProjectsSectionComponent {
     const newProjectName = `Project_${newProjectId}`;
 
     this.apiClientService
-      .postData('/project', { name: newProjectName })
+      .postData('/project/' + this.userId, { name: newProjectName })
       .pipe(
         catchError((error: HttpErrorResponse) => {
           this.errorMessage =
@@ -94,14 +105,19 @@ export class ProjectsSectionComponent {
     );
   }
 
-  private generateUniqueProjectId(): number {
-    let newProjectId = this.projects.length + 1;
-    while (
-      this.projects.some((project) => project.id === newProjectId.toString())
-    ) {
-      newProjectId++;
-    }
-    return newProjectId;
+  private generateUniqueProjectId(): string {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const idLength = 10; // You can adjust the length of the random string as needed
+    let randomId = '';
+  
+    do {
+      for (let i = 0; i < idLength; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        randomId += characters[randomIndex];
+      }
+    } while (this.projects.some((project) => project.id === randomId));
+  
+    return randomId;
   }
 
   renameProject(project: Project, projectName: HTMLInputElement): void {
@@ -118,12 +134,9 @@ export class ProjectsSectionComponent {
       .updateData('/project/' + project.id, { name: project.name })
       .pipe(
         catchError((error: HttpErrorResponse) => {
-          const errorMessage =
+          this.errorMessage =
             error.error?.message ||
             'An unexpected error occurred. Please try again.';
-          this.errorMessage = errorMessage;
-          projectName.classList.add('error');
-          project.hasErrors = true;
           return of(null);
         })
       )
@@ -139,18 +152,11 @@ export class ProjectsSectionComponent {
 
   openProject(project: Project): void {
     if (!project.hasErrors) {
-      const fileToOpen = this.fileService.files.find(
-        (file) => file.id === project.id
-      );
-      if (fileToOpen) {
-        this.fileService.updateCurrentFile(fileToOpen);
-      }
       this.router.navigate(['/editor/' + project.id]);
     }
   }
 
   deleteProject(projectId: string): void {
-    this.projects = this.projects.filter((project) => project.id !== projectId);
     this.apiClientService
       .deleteData('/project/' + projectId)
       .pipe(

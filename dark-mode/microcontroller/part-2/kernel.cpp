@@ -49,13 +49,13 @@ CKernel::CKernel (void)
 	m_Logger (m_Options.GetLogLevel (), &m_Timer),
 	m_GPIOManager (&m_Interrupt), 		// set up GPIO manager
 
-	m_GPIO18 (18, GPIOModeOutput), 		// TODO: modify to your output pin
+	m_GPIO18 (18, GPIOModeOutput),
      m_USBHCI (&m_Interrupt, &m_Timer),
      m_Net(pIPAddress, pNetMask, pDefaultGateway, pDNSServer, pHostname, NetDeviceTypeEthernet)
 
 {
 	ActLED.Blink (5);		// show we are alive
-	// TODO: initialize LED as off
+	//initialize LED as off
     flag = false;
 
 }
@@ -115,10 +115,10 @@ boolean CKernel::Initialize (void)
 	    bOK = m_Net.Initialize ();
 	}
 
-    //if(bOK)
-    //{
-        //bOK = m_Client.Initialize();
-    //}
+    if(bOK)
+    {
+        bOK = m_Client.Initialize();
+    }
 
 	return bOK;
 }
@@ -137,7 +137,7 @@ TShutdownMode CKernel::Run (void)
 	m_Logger.Write (FromKernel, LogNotice, "Network config starting up.");
 
 	// Set up GPIO pin interrupt
-	unsigned int myPin = 17; 		// TODO: set this based on the pin to be used for interrupt
+	unsigned int myPin = 17;
 	CGPIOPin myInputPin (myPin, GPIOModeInput, &m_GPIOManager);
 
 
@@ -157,35 +157,34 @@ TShutdownMode CKernel::Run (void)
         // If flag set to true, execute
         if(flag) {
 
-            m_Logger.Write(FromKernel, LogNotice, "FLAG IS TRUE");
+			m_Logger.Write(FromKernel, LogNotice, "FLAG IS TRUE");
 
-            // New socket object
-            CSocket *pSocket2 = new CSocket(&m_Net, IPPROTO_TCP);
+			// New socket object
+			CSocket *pSocket2 = new CSocket(&m_Net, IPPROTO_TCP);
 
-            // Define target IP address and port
-            u8 TargetIPArray2[] = {169, 254, 71, 91};
-            CIPAddress ForeignIP2(TargetIPArray2);
-            u16 nForeignPort2 = 8080;
+			u8 TargetIPArray2[] = {34,125,30,158}; // GCP instance IP address
+			CIPAddress ForeignIP2(TargetIPArray2);
+			u16 nForeignPort2 = 8080;
 
-            // Connect to target
-            pSocket2->Connect(ForeignIP2, nForeignPort2);
+			// Connect to target
+			pSocket2->Connect(ForeignIP2, nForeignPort2);
 
-            // Send message
-            CString message2("connection successful\r\n\r\n");
-            unsigned messageLength2 = message2.GetLength();
-            pSocket2->Send(message2, messageLength2, MSG_DONTWAIT);
+			// Send HTTP request
+			CString request("GET /dark-mode/toggle HTTP/1.1\r\nHost: 34.125.30.158:8080\r\n\r\n");
+			unsigned requestLength = request.GetLength();
+			pSocket2->Send(request, requestLength, MSG_DONTWAIT);
 
-            // Close connection
-            delete pSocket2;
+			// Close connection
+			delete pSocket2;
 
-            // Blink LED
-            m_GPIO18.Write(HIGH);
-            m_Timer.MsDelay(200);
-            m_GPIO18.Write(LOW);
+			// Blink LED
+			m_GPIO18.Write(HIGH);
+			m_Timer.MsDelay(200);
+			m_GPIO18.Write(LOW);
 
-            // Reset flag
-            flag = false;
-        }
+			// Reset flag
+			flag = false;
+		}
 
 
 	}
