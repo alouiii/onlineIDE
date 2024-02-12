@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 import { ApiClientService } from './api-client.service';
 
 export interface CompileApiResponse {
-  output: string;
+  stderr: string;
 }
 
 @Injectable({
@@ -30,7 +30,7 @@ export class CompileService {
       // Actual HTTP request
       return this.apiClientService.postData(this.compileUrl, { code }).pipe(
         tap((response: CompileApiResponse) => {
-          this.compileOutputSource.next(response.output);
+          this.compileOutputSource.next(response.stderr);
         })
       );
     }
