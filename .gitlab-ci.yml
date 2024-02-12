@@ -195,6 +195,7 @@ darkmode_build:
   stage: build
   script:
     - git fetch --prune # Ensure always running the last version. 
+    - git fetch --prune # Ensure always running the last version. 
     - del .git/shallow 2>nul; if ($?) { echo "File deleted successfully" } else { echo "File does not exist" }
     - echo "Building the dark-mode"
     - echo "Current directory... $(Get-Location)"

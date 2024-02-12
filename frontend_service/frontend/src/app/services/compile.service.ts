@@ -6,7 +6,7 @@ import { tap } from 'rxjs/operators';
 import { ApiClientService } from './api-client.service';
 
 export interface CompileApiResponse {
-  output: string;
+  stderr: string;
 }
 
 @Injectable({
@@ -20,7 +20,7 @@ export class CompileService {
 
   constructor(private apiClientService: ApiClientService) {}
 
-  compileCode(code: string): Observable<any> {
+  compileCode(code: string, fileName: any): Observable<any> {
     if (this.isMock) {
       // Mock response
       const mockOutput = `${code}`;
@@ -28,9 +28,9 @@ export class CompileService {
       return of({ output: mockOutput });
     } else {
       // Actual HTTP request
-      return this.apiClientService.postData(this.compileUrl, { code }).pipe(
+      return this.apiClientService.postData(this.compileUrl, { code: code, fileName: fileName }).pipe(
         tap((response: CompileApiResponse) => {
-          this.compileOutputSource.next(response.output);
+          this.compileOutputSource.next(response.stderr);
         })
       );
     }
