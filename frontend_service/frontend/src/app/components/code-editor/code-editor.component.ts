@@ -110,7 +110,7 @@ export class CodeEditorComponent implements OnDestroy {
   }
 
   compile() {
-    this.compileService.compileCode(this.code).subscribe({
+    this.compileService.compileCode(this.code, this.fileService.currentFile?.fileName).subscribe({
       next: (response) => {
         console.log('Compilation successful:', response);
       },
