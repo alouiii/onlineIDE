@@ -100,7 +100,7 @@ export class CodeEditorComponent implements OnDestroy {
   save() {
     const fileId = this.fileService.currentFile?.id;
     this.apiClientService
-      .updateData(`/file/${fileId}`, { code: this.code })
+      .updateData(`/project/file/${fileId}`, { code: this.code })
       .subscribe((response) => {
         console.log('FILE saved');
         console.log(response);
