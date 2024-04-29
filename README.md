@@ -1,5 +1,7 @@
 # OnlineIDE
 
+![home_page](./online_ide.jpg)
+![projects_page](./project_management.jpg)
 
 
 ## Add your files
